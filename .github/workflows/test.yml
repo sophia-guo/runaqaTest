@@ -3,18 +3,14 @@ on: # rebuild any PRs and main branch changes
   push:
 jobs:
   build: # make sure build/ci work properly
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+    runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
     - run: printenv
     - uses: TheMrMilchmann/install-jdk@v1
       with:
         version: '11'
-        targets: 'JDK_11,JAVA_HOME'
+        targets: 'JDK_11;JAVA_HOME'
     - run: printenv
         
         
