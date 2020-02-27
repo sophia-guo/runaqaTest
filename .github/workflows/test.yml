@@ -14,7 +14,6 @@ jobs:
     - uses: TheMrMilchmann/install-jdk@v1
       with:
         version: '11'
-        targets: 'JDK_11'
     - run: printenv
     - run: /Users/runner/hostedtoolcache/jdk-11/1.0.0/x64/bin/java -version
       
