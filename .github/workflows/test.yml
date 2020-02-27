@@ -16,7 +16,7 @@ jobs:
         version: '11'
         targets: 'JDK_11'
     - run: printenv
-    - run: java -version
+    - run: /Users/runner/hostedtoolcache/jdk-11/1.0.0/x64/bin/java -version
       
         
         
