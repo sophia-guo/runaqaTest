@@ -7,15 +7,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
+        os: [ubuntu-latest]
     steps:
     - uses: actions/checkout@v1
-    - run: printenv
-    - uses: TheMrMilchmann/install-jdk@v1
+    - uses: sophia-guo/runaqa@v1
       with:
         version: '11'
-    - run: printenv
-    - run: /Users/runner/hostedtoolcache/jdk-11/1.0.0/x64/bin/java -version
+        build_list: 'opendjk'
+        target: '_jdk_custom'
       
         
         
