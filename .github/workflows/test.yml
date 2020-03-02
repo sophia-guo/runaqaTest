@@ -13,7 +13,7 @@ jobs:
     - uses: sophia-guo/runaqa@v1
       with:
         version: '11'
-        build_list: 'opendjk'
+        build_list: 'openjdk'
         target: '_jdk_custom'
       
         
