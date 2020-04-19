@@ -1,18 +1,22 @@
 name: "build-test"
 on: # rebuild any PRs and main branch changes
   push:
+
 jobs:
   build: # make sure build/ci work properly
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [windows-latest]
+    runs-on: ubuntu-16.04
     steps:
     - uses: actions/checkout@v1
-    - uses: AdoptOpenJDK/run-aqa@v1
+    - name: Build Openj9 JDK
+      id: buildOpenj9
+      uses: sophia-guo/build-jdk-openj9@master
       with:
-        version: '11'
+        version: '8'
+    - name: AQA
+      uses: sophia-guo/run-aqa@env
+      env:
+        TEST_JDK_HOME: ${{ steps.buildOpenj9.outputs.BuildOpenJ9JDK }}
+      with:
+        jdksource: 'customized'
         build_list: 'openjdk'
         target: '_jdk_custom'
-      shell: bash
