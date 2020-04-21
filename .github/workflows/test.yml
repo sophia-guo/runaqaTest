@@ -1,25 +1,21 @@
- name: "test jDK installed by AdoptOpenJDK/install-jdk nightly|releases"
- on: # rebuild any PRs and main branch changes
-   push:
+name: "run-aqa test against build OpenJ9 JDK directly"
+on: # rebuild any PRs and main branch changes
+  push:
 
- jobs:
-   build:
-     runs-on: ${{ matrix.os }}
-     strategy:
-       fail-fast: false
-       matrix:
-         os: [ubuntu-latest, macos-latest]
-     steps:
-     - uses: actions/checkout@v1
-     - uses: AdoptOpenJDK/install-jdk@v1
-       with:
-         version: '11'
-         source: 'nightly'
-         impl: 'openj9'
-     - name: AQA
-       uses: sophia-guo/run-aqa@supportBuildJDK
-       with: 
-         version: '11'
-         jdksource: 'install-jdk'
-         build_list: 'openjdk'
-         target: '_jdk_custom'
+jobs:
+  build: # make sure build/ci work properly
+    runs-on: ubuntu-16.04
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build Openj9 JDK
+      id: buildOpenj9
+      uses: sophia-guo/build-jdk-openj9@v2
+      with:
+        version: '8'
+    - name: AQA
+      uses: sophia-guo/run-aqa@supportBuildJDK
+      env:
+        TEST_JDK_HOME: ${{ steps.buildOpenj9.outputs.BuildOpenJ9JDK }}
+      with:
+        build_list: 'openjdk'
+        target: '_jdk_custom'
