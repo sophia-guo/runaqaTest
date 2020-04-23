@@ -7,15 +7,10 @@ jobs:
      runs-on: ubuntu-16.04
      steps:
      - uses: actions/checkout@v1
-     - name: Build Openj9 JDK
-       id: buildOpenj9
-       uses: sophia-guo/build-jdk-openj9@v2
-       with:
-        version: '8'
-     - name: AQA
-       uses: AdoptOpenJDK/run-aqa@v1
-       env:
-        TEST_JDK_HOME: ${{ steps.buildOpenj9.outputs.BuildOpenJ9JDK }}
-       with:
-        build_list: 'openjdk'
-        target: '_jdk_math'
+     -  name: AQA
+        uses: AdoptOpenJDK/run-aqa@addUser
+        with:
+          version: '11'
+          jdksource: 'github-hosted'
+          build_list: 'openjdk'
+          target: '_jdk_math'
