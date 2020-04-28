@@ -1,16 +1,5 @@
-name: "run-aqa test against build OpenJ9 JDK directly"
-on: # rebuild any PRs and main branch changes
-   push:
-
-jobs:
-   build: # make sure build/ci work properly
-     runs-on: ubuntu-16.04
-     steps:
-     - uses: actions/checkout@v1
-     -  name: AQA
-        uses: AdoptOpenJDK/run-aqa@addUser
-        with:
-          version: '11'
-          jdksource: 'github-hosted'
-          build_list: 'openjdk'
-          target: '_jdk_math'
+name: "place holder for example"
+on:
+  push:
+    branches-ignore:
+      - '**'
