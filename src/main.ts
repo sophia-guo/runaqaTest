@@ -5,8 +5,8 @@ import * as io from '@actions/io'
 
 async function run(): Promise<void> {
   try {
-    core.info(`git_ref is ${process.env.GITHUB_REF}`)
-    await exec.exec('ls')
+    let myInput = core.getInput('myInput');
+    core.info(`what is the myInput is ${myInput}`)
   } catch (error) {
     core.setFailed(error.message)
   }

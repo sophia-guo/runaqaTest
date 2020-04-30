@@ -1,5 +1,5 @@
 name: "place holder for example"
 on:
   push:
-    branches-ignore:
-      - '**'
+    //branches-ignore:
+    // - '**'
