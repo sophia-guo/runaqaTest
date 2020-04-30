@@ -1272,7 +1272,7 @@ function run() {
         try {
             const defaultMyInput = core.getInput('myInput') === 'true';
             core.info(`what is defatul ${defaultMyInput}`);
-            const jdkJar = tc.downloadTool(`https://api.adoptopenjdk.net/v3/binary/latest/10/ga/mac/x64/jdk/openj9/normal/adoptopenjdk`);
+            const jdkJar = yield tc.downloadTool(`https://api.adoptopenjdk.net/v3/binary/latest/10/ga/mac/x64/jdk/openj9/normal/adoptopenjdk`);
             yield exec.exec(`sudo tar -xzf ${jdkJar} -C ./ --strip=3`);
             exec.exec('ls');
         }
