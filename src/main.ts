@@ -5,8 +5,9 @@ import * as io from '@actions/io'
 
 async function run(): Promise<void> {
   try {
-    let myInput = core.getInput('myInput');
-    core.info(`what is the myInput is ${myInput}`)
+    const defaultMyInput = core.getInput('myInput') === 'true'
+    core.info(`what is defatul ${defaultMyInput}`)
+    
   } catch (error) {
     core.setFailed(error.message)
   }

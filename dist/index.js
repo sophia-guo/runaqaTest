@@ -76,8 +76,8 @@ const core = __importStar(__webpack_require__(470));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            let myInput = core.getInput('myInput');
-            core.info(`what is the myInput is ${myInput}`);
+            const defaultMyInput = core.getInput('myInput') === 'true';
+            core.info(`what is defatul ${defaultMyInput}`);
         }
         catch (error) {
             core.setFailed(error.message);

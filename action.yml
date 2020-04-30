@@ -4,7 +4,7 @@ author: 'Your name or organization here'
 inputs:
   myInput:              # change this
     description: 'input description here'
-    default: 'test'
+    default: false
 runs:
   using: 'node12'
   main: 'dist/index.js'
