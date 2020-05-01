@@ -1,7 +1,8 @@
 name: "Mac, openj9, jdk11u, default build -jdk"
 on:
   push:
-
+    branches-ignore:
+      - '**'
 jobs:
   build:
     runs-on: macos-10.15

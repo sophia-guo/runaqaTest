@@ -5,6 +5,8 @@ inputs:
   myInput:              # change this
     description: 'input description here'
     default: false
+outputs:
+  BuildJDKDir:
 runs:
   using: 'node12'
   main: 'dist/index.js'
