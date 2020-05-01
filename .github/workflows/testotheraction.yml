@@ -1,6 +1,9 @@
 name: "place holder for example"
 on:
   push:
+    branches-ignore:
+      - '**'
+
 jobs:
   build:
     runs-on: ubuntu-16.04

@@ -5,12 +5,9 @@ import * as io from '@actions/io'
 
 async function run(): Promise<void> {
   try {
-  //  const defaultMyInput = core.getInput('myInput')
-    await io.mkdirP('jdk')
-    process.chdir('jdk')
-    await io.mkdirP('boot')
-    await io.mkdirP('home')
-    core.setOutput('BuildJDKDir', `${process.env['GITHUB_WORKSPACE']}/jdk/boot`)
+    const bootjdkJar = await tc.downloadTool(`https://github.com/AdoptOpenJDK/openjdk10-binaries/releases/download/jdk-10.0.2%2B13.1/OpenJDK10U-jdk_x64_mac_hotspot_10.0.2_13.tar.gz`)
+    await exec.exec(`sudo tar -xzf ${bootjdkJar} -C ./ --strip=3`)
+    await exec.exec('ls')
   } catch (error) {
     core.setFailed(error.message)
   }
