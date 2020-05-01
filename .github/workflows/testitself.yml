@@ -1,14 +1,18 @@
-name: "default value"
+name: "Mac, openj9, jdk11u, default build -jdk"
 on:
   push:
- #   branches-ignore:
-  #    - '**'
+
 jobs:
   build:
-    runs-on: ubuntu-16.04
+    runs-on: macos-10.15
     steps:
-    - uses: actions/checkout@v1
-    - uses: ./
+    - uses: sophia-guo/build-jdk-hotspot@v1
+      id: buildJDK
+      with: 
+        javaToBuild: 'jdk11u'
+        impl: 'openj9'
+    - run: ${{ steps.buildJDK.outputs.BuildJDKDir }}/bin/java -version
+    - uses: actions/upload-artifact@v2-preview
       with:
-        myInput: true
-        
+        name: JDK
+        path: ./**/artifacts/*.tar.gz/
