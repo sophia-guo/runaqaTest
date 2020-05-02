@@ -1,8 +1,7 @@
 name: "Mac, openj9, jdk11u, default build -jdk"
 on:
   push:
-    branches-ignore:
-      - '**'
+
 jobs:
   build:
     runs-on: macos-10.15
@@ -10,7 +9,7 @@ jobs:
     - uses: sophia-guo/build-jdk-hotspot@v1
       id: buildJDK
       with: 
-        javaToBuild: 'jdk11u'
+        javaToBuild: 'jdk13u'
         impl: 'openj9'
     - run: ${{ steps.buildJDK.outputs.BuildJDKDir }}/bin/java -version
     - uses: actions/upload-artifact@v2-preview
