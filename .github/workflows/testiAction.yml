@@ -1,8 +1,6 @@
 name: "Mac, openj9, jdk8"
 on:
   push:
-    branches-ignore:
-      - '**'
 
 jobs:
   build:
