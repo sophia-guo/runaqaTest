@@ -4,12 +4,12 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-16.04 #macos-10.15
+    runs-on: macos-10.15 #ubuntu-16.04 #
     steps:
     - uses: sophia-guo/build-jdk-openj9@mac
       id: buildJDK
       with: 
-        javaToBuild: '8'
+        javaToBuild: '11'
     - run: ${{ steps.buildJDK.outputs.BuildJDKDir }}/bin/java -version
     - uses: actions/upload-artifact@v2-preview
       with:
