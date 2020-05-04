@@ -5,10 +5,11 @@ import * as io from '@actions/io'
 
 async function run(): Promise<void> {
   try {
-    const bootjdkJar = await tc.downloadTool(`https://github.com/AdoptOpenJDK/openjdk10-binaries/releases/download/jdk-10.0.2%2B13.1/OpenJDK10U-jdk_x64_mac_hotspot_10.0.2_13.tar.gz`)
-    await exec.exec(`sudo tar -xzf ${bootjdkJar} -C ./ --strip=3`)
-    await exec.exec('ls')
-    core.info("hello")
+    await exec.exec('brew install gnu-tar')
+    core.addPath('/usr/local/opt/gnu-tar/libexec/gnubin')
+    core.info(`path is ${process.env['PATH']}`)
+    exec.exec('printenv')
+
   } catch (error) {
     core.setFailed(error.message)
   }

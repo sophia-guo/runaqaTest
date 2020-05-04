@@ -1,17 +1,12 @@
-name: "Mac, openj9, jdk8"
+name: "place holder for example"
 on:
   push:
 
 jobs:
   build:
-    runs-on: macos-10.15 #ubuntu-16.04 #
+    runs-on: macos-10.15 # ubuntu-16.04
     steps:
-    - uses: sophia-guo/build-jdk-openj9@mac
+    - uses: actions/checkout@v1
+    - uses: ./
       id: buildJDK
-      with: 
-        version: '11'
-    - run: ${{ steps.buildJDK.outputs.BuildJDKDir }}/bin/java -version
-    - uses: actions/upload-artifact@v2-preview
-      with:
-        name: JDK
-        path: ./**/artifacts/*.tar.gz/
+    - run: echo ${{ steps.buildJDK.outputs.BuildJDKDir }}
