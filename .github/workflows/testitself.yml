@@ -9,7 +9,7 @@ jobs:
     - uses: sophia-guo/build-jdk-openj9@mac
       id: buildJDK
       with: 
-        javaToBuild: '11'
+        version: '11'
     - run: ${{ steps.buildJDK.outputs.BuildJDKDir }}/bin/java -version
     - uses: actions/upload-artifact@v2-preview
       with:
