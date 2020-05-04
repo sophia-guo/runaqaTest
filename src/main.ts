@@ -9,6 +9,7 @@ async function run(): Promise<void> {
     core.addPath('/usr/local/opt/gnu-tar/libexec/gnubin')
     core.info(`path is ${process.env['PATH']}`)
     exec.exec('printenv')
+    exec.exec('tar --version')
 
   } catch (error) {
     core.setFailed(error.message)
