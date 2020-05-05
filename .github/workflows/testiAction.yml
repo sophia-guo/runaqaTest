@@ -1,5 +1,5 @@
-name: "Mac, openj9, jdk8"
-on:
+name: "build-jdk-openj9 with adoptopenjdk openjdk-build linux"
+on: # rebuild any PRs and main branch changes
   push:
 
 jobs:
@@ -10,12 +10,14 @@ jobs:
       matrix:
         os: [ubuntu-16.04, macos-10.15]
     steps:
-    - uses: sophia-guo/build-jdk-openj9@jdk8
+    - uses: actions/checkout@v1
+    - uses: sophia-guo/build-jdk-hotspot@gradle
       id: buildJDK
       with: 
-        version: '14'
+        javaToBuild: 'jdk11u'
     - run: ${{ steps.buildJDK.outputs.BuildJDKDir }}/bin/java -version
     - uses: actions/upload-artifact@v2-preview
+      if: failure()
       with:
-        name: JDK
-        path: ./**/artifacts/*.tar.gz/
+        name: configure_output
+        path: ./**/config.log
