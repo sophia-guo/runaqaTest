@@ -15,7 +15,7 @@ jobs:
     - uses: sophia-guo/build-jdk-hotspot@gradle
       id: buildJDK
       with: 
-        javaToBuild: 'jdk13u'
+        javaToBuild: 'jdk14u'
         impl: 'openj9'
     - uses: actions/upload-artifact@v2-preview
       if: failure()
