@@ -6,7 +6,7 @@ import * as io from '@actions/io'
 async function run(): Promise<void> {
   try {
     const opensslV = await tc.downloadTool('https://www.openssl.org/source/old/1.0.2/openssl-1.0.2r.tar.gz')
-    tc.extractTar(`${opensslV}`, `${process.cwd()}`)
+    await tc.extractTar(`${opensslV}`, `${process.cwd()}`)
     await exec.exec('ls')
     process.chdir('openssl-1.0.2r')
     await exec.exec(`sudo ./config --prefix=/usr/local/openssl-1.0.2 shared && make && make install`)
