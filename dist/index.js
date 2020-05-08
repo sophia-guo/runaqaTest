@@ -1272,7 +1272,7 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const cuda9 = yield tc.downloadTool('https://developer.nvidia.com/compute/cuda/9.0/Prod/local_installers/cuda_9.0.176_384.81_linux-run');
-            yield exec.exec(`sh ${cuda9} --silent --toolkit --override`);
+            yield exec.exec(`sudo sh ${cuda9} --silent --toolkit --override`);
             process.chdir('/usr/local/cuda-9.0');
             yield exec.exec('ls');
             yield io.rmRF(`${cuda9}`);
