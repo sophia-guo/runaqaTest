@@ -10,6 +10,8 @@ async function run(): Promise<void> {
     await exec.exec('ls')
     process.chdir('openssl-1.0.2r')
     await exec.exec(`sudo ./config --prefix=/usr/local/openssl-1.0.2 shared && make && make install`)
+    await exec.exec(`sudo make`)
+    await exec.exec(`sudo make install`)
     await exec.exec('ls /usr/local/')
     await io.rmRF(`${opensslV}`)
   } catch (error) {

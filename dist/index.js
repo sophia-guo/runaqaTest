@@ -1276,6 +1276,8 @@ function run() {
             yield exec.exec('ls');
             process.chdir('openssl-1.0.2r');
             yield exec.exec(`sudo ./config --prefix=/usr/local/openssl-1.0.2 shared && make && make install`);
+            yield exec.exec(`sudo make`);
+            yield exec.exec(`sudo make install`);
             yield exec.exec('ls /usr/local/');
             yield io.rmRF(`${opensslV}`);
         }
