@@ -1,13 +1,11 @@
 name: "place holder for example"
 on:
   push:
-    branches-ignore:
-      - '**'
+#    branches-ignore:
+#      - '**'
 jobs:
   build:
-    runs-on: macos-10.15 # ubuntu-16.04
+    runs-on: ubuntu-16.04 # ubuntu-16.04
     steps:
     - uses: actions/checkout@v1
     - uses: ./
-      id: buildJDK
-    - run: echo ${{ steps.buildJDK.outputs.BuildJDKDir }}

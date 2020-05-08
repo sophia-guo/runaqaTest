@@ -1271,15 +1271,11 @@ const io = __importStar(__webpack_require__(1));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            yield exec.exec('brew install gnu-tar');
-            core.addPath('/usr/local/opt/gnu-tar/libexec/gnubin');
-            core.info(`path is ${process.env['PATH']}`);
-            exec.exec('printenv');
-            exec.exec('tar --version');
-            const freeMarker = yield tc.downloadTool(`https://sourceforge.net/projects/freemarker/files/freemarker/2.3.8/freemarker-2.3.8.tar.gz/download`);
-            yield exec.exec(`sudo tar -xzf ${freeMarker} freemarker-2.3.8/lib/freemarker.jar --strip=2`);
-            yield io.rmRF(`${freeMarker}`);
-            exec.exec('ls');
+            const cuda9 = yield tc.downloadTool('https://developer.nvidia.com/compute/cuda/9.0/Prod/local_installers/cuda_9.0.176_384.81_linux-run');
+            yield exec.exec(`sh ${cuda9} --silent --toolkit --override`);
+            process.chdir('/usr/local/cuda-9.0');
+            yield exec.exec('ls');
+            yield io.rmRF(`${cuda9}`);
         }
         catch (error) {
             core.setFailed(error.message);
