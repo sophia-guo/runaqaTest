@@ -1272,7 +1272,7 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const opensslV = yield tc.downloadTool('https://www.openssl.org/source/old/1.0.2/openssl-1.0.2r.tar.gz');
-            tc.extractTar(`${opensslV}`);
+            tc.extractTar(`${opensslV}`, process.cwd());
             yield exec.exec('ls');
             process.chdir('openssl-1.0.2r');
             yield exec.exec(`sudo ./config --prefix=/usr/local/openssl-1.0.2 shared && make && make install`);
