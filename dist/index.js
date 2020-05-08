@@ -1271,11 +1271,13 @@ const io = __importStar(__webpack_require__(1));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const cuda9 = yield tc.downloadTool('https://developer.nvidia.com/compute/cuda/9.0/Prod/local_installers/cuda_9.0.176_384.81_linux-run');
-            yield exec.exec(`sudo sh ${cuda9} --silent --toolkit --override`);
-            process.chdir('/usr/local/cuda-9.0');
+            const opensslV = yield tc.downloadTool('https://www.openssl.org/source/old/1.0.2/openssl-1.0.2r.tar.gz');
+            tc.extractTar(`${opensslV}`);
             yield exec.exec('ls');
-            yield io.rmRF(`${cuda9}`);
+            process.chdir('openssl-1.0.2r');
+            yield exec.exec(`sudo ./config --prefix=/usr/local/openssl-1.0.2 shared && make && make install`);
+            yield exec.exec('ls /usr/local/');
+            yield io.rmRF(`${opensslV}`);
         }
         catch (error) {
             core.setFailed(error.message);

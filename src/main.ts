@@ -5,11 +5,13 @@ import * as io from '@actions/io'
 
 async function run(): Promise<void> {
   try {
-    const cuda9 = await tc.downloadTool('https://developer.nvidia.com/compute/cuda/9.0/Prod/local_installers/cuda_9.0.176_384.81_linux-run')
-    await exec.exec(`sudo sh ${cuda9} --silent --toolkit --override`)
-    process.chdir('/usr/local/cuda-9.0')
+    const opensslV = await tc.downloadTool('https://www.openssl.org/source/old/1.0.2/openssl-1.0.2r.tar.gz')
+    tc.extractTar(`${opensslV}`)
     await exec.exec('ls')
-    await io.rmRF(`${cuda9}`)
+    process.chdir('openssl-1.0.2r')
+    await exec.exec(`sudo ./config --prefix=/usr/local/openssl-1.0.2 shared && make && make install`)
+    await exec.exec('ls /usr/local/')
+    await io.rmRF(`${opensslV}`)
   } catch (error) {
     core.setFailed(error.message)
   }
