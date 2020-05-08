@@ -1268,13 +1268,31 @@ const core = __importStar(__webpack_require__(470));
 const tc = __importStar(__webpack_require__(533));
 const exec = __importStar(__webpack_require__(986));
 const io = __importStar(__webpack_require__(1));
+const path = __importStar(__webpack_require__(622));
+let tempDirectory = process.env["RUNNER_TEMP"] || "";
+const IS_WINDOWS = process.platform === "win32";
+let OS = IS_WINDOWS ? "windows" : process.platform === "darwin" ? "mac" : "linux";
+if (!tempDirectory) {
+    let baseLocation;
+    if (IS_WINDOWS) {
+        // On windows use the USERPROFILE env variable
+        baseLocation = process.env["USERPROFILE"] || "C:\\";
+    }
+    else if (process.platform === "darwin") {
+        baseLocation = "/Users";
+    }
+    else {
+        baseLocation = "/home";
+    }
+    tempDirectory = path.join(baseLocation, "actions", "temp");
+}
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const opensslV = yield tc.downloadTool('https://www.openssl.org/source/old/1.0.2/openssl-1.0.2r.tar.gz');
-            yield tc.extractTar(`${opensslV}`, `${process.cwd()}`);
+            yield tc.extractTar(`${opensslV}`, `${tempDirectory}`);
             yield exec.exec('ls');
-            process.chdir('openssl-1.0.2r');
+            process.chdir(`${tempDirectory}/openssl-1.0.2r`);
             yield exec.exec(`sudo ./config --prefix=/usr/local/openssl-1.0.2 shared`);
             yield exec.exec(`sudo make`);
             yield exec.exec(`sudo make install`);
