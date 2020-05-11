@@ -17,8 +17,8 @@ jobs:
       with: 
         javaToBuild: 'jdk14u'
         impl: 'openj9'
+    - run: ${{ steps.buildJDK.outputs.BuildJDKDir }}/bin/java -version
     - uses: actions/upload-artifact@v2-preview
-      if: failure()
       with:
-        name: configure_output
-        path: ./**/config.log
+        name: buildJDK
+        path: ./**/artifacts/*.tar.gz/
