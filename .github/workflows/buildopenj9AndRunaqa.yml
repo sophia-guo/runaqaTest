@@ -1,0 +1,28 @@
+
+name: "run-aqa test against build OpenJ9 JDK directly"
+on: # rebuild any PRs and main branch changes
+   # pull_request:
+  push:
+
+jobs:
+   build: # make sure build/ci work properly
+     runs-on: ubuntu-16.04
+     steps:
+     - uses: actions/checkout@v1
+     - name: Build Openj9 JDK
+       id: buildJDK
+       uses: sophia-guo/build-jdk-openj9@v2
+       with:
+        version: '8'
+     - name: AQA
+       uses: AdoptOpenJDK/run-aqa@v1
+       env:
+        TEST_JDK_HOME: ${{ steps.buildJDK.outputs.BuildJDKDir }}
+       with:
+        build_list: 'openjdk'
+        target: '_jdk_math'
+     - uses: actions/upload-artifact@v2-preview
+       if: failure()
+       with:
+         name: test_output
+         path: ./**/test_output_*/
