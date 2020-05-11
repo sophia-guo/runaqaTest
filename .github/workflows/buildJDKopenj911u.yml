@@ -15,7 +15,7 @@ jobs:
     - uses: sophia-guo/build-jdk-hotspot@update
       id: buildJDK
       with: 
-        javaToBuild: 'jdk14u'
+        javaToBuild: 'jdk11u'
         impl: 'openj9'
     - run: ${{ steps.buildJDK.outputs.BuildJDKDir }}/bin/java -version
     - uses: actions/upload-artifact@v2-preview
