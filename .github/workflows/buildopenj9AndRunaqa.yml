@@ -20,7 +20,7 @@ jobs:
         TEST_JDK_HOME: ${{ steps.buildJDK.outputs.BuildJDKDir }}
        with:
         build_list: 'openjdk'
-        target: '_jdk_math'
+        target: '_jdk_math_j9'
      - uses: actions/upload-artifact@v2-preview
        if: failure()
        with:
