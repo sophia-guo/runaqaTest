@@ -11,22 +11,22 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest]
-     steps:
-     - uses: actions/checkout@v1
-     - name: Build Openj9 JDK
-       id: buildJDK
-       uses: sophia-guo/build-jdk-openj9@v1
-       with:
+    steps:
+    - uses: actions/checkout@v1
+    - name: Build Openj9 JDK
+      id: buildJDK
+      uses: sophia-guo/build-jdk-openj9@v1
+      with:
         version: '11'
-     - name: AQA
-       uses: sophia-guo/run-aqa@target
-       env:
+    - name: AQA
+      uses: sophia-guo/run-aqa@target
+      env:
         TEST_JDK_HOME: ${{ steps.buildJDK.outputs.BuildJDKDir }}
-       with:
+      with:
         build_list: 'functional'
         target: '_floatSanityTests'
-     - uses: actions/upload-artifact@v2-preview
-       if: failure()
-       with:
-         name: test_output
-         path: ./**/test_output_*/
+    - uses: actions/upload-artifact@v2-preview
+      if: failure()
+      with:
+        name: test_output
+        path: ./**/test_output_*/

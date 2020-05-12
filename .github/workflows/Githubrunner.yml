@@ -11,11 +11,9 @@ jobs:
      runs-on: ubuntu-16.04
      steps:
      - uses: actions/checkout@v1
-        steps:
-    - uses: actions/checkout@v1
-    - name: AQA
-      uses: AdoptOpenJDK/run-aqa@v1
-      with: 
+     - name: AQA
+       uses: AdoptOpenJDK/run-aqa@v1
+       with: 
         version: '11'
         jdksource: 'github-hosted'
         build_list: 'openjdk'
