@@ -1,10 +1,10 @@
 
-name: "run-aqa test against build OpenJ9 JDK directly"
+name: "run-aqa custom_target against AdoptOpenJDK OpenJ9"
 on: # rebuild any PRs and main branch changes
    # pull_request:
   push:
-    branches-ignore:
-      - '**'
+   # branches-ignore:
+   #   - '**'
 
 jobs:
    build: # make sure build/ci work properly
@@ -23,6 +23,7 @@ jobs:
          jdksource: 'install-jdk'
          build_list: 'openjdk'
          target: '_jdk_custom'
+         custom_target: 'test/jdk/java/math/BigInteger/BigIntegerTest.java'
      - uses: actions/upload-artifact@v2-preview
        if: failure()
        with:
