@@ -17,7 +17,7 @@ jobs:
       id: buildJDK
       uses: sophia-guo/build-jdk-openj9@v1
       with:
-        version: '11'
+        version: '14'
     - name: AQA
       uses: sophia-guo/run-aqa@target
       env:
