@@ -1,0 +1,30 @@
+
+name: "run-aqa test against build OpenJ9 JDK directly"
+on: # rebuild any PRs and main branch changes
+   # pull_request:
+  push:
+ #   branches-ignore:
+  #    - '**'
+jobs:
+   build: # make sure build/ci work properly
+     runs-on: ubuntu-16.04
+     steps:
+     - uses: actions/checkout@v1
+     - uses: AdoptOpenJDK/install-jdk@v1
+       with:
+         version: '11'
+         architecture: x64
+         source: 'https://140-211-168-230-openstack.osuosl.org/artifactory/ci-eclipse-openj9/Build_JDK11_x86-64_linux_Nightly/377/OpenJ9-JDK11-x86-64_linux-20200512-020128.tar.gz'
+         archiveExtension: '.tar'
+     - name: AQA
+       uses: sophia-guo/run-aqa@target
+       with: 
+         version: '11'
+         jdksource: 'install-jdk'
+         build_list: 'openjdk'
+         target: '_jdk_custom'
+     - uses: actions/upload-artifact@v2-preview
+       if: failure()
+       with:
+         name: test_output
+         path: ./**/test_output_*/
