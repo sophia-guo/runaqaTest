@@ -1,0 +1,19 @@
+name: "place holder for example"
+on:
+  push:
+#    branches-ignore:
+ #     - '**'
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2016] #[ubuntu-latest, macos-latest]
+    steps:
+    - uses: actions/checkout@v1
+    - uses: AdoptOpenJDK/install-jdk@v1
+      with:
+        version: '11'
+        targets: 'JDK_11'
+    - run: printenv
