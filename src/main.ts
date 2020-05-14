@@ -31,9 +31,8 @@ async function run(): Promise<void> {
     await exec.exec(`C:\\temp\\cygwin.exe  --quiet-mode --download --local-install
     --delete-orphans --site  https://mirrors.kernel.org/sourceware/cygwin/
     --local-package-dir "C:\\cygwin_packages"
-    --root "C:\cygwin64"
-    --categories Devel`)
-    await exec.exec(`C:\\temp\\cygwin.exe  -q -P autoconf cpio libguile2.0_22 unzip zipcurl curl-debuginfo libcurl-devel libpng15 libpng-devel perl-Text-CSV`)
+    --root "C:\\cygwin64"`)
+    await exec.exec(`C:\\temp\\cygwin.exe  -q -P autoconf cpio libguile2.0_22 unzip zipcurl curl-debuginfo libcurl-devel libpng15 libpng-devel`)
     await exec.exec(`C:/cygwin64/bin/git config --system core.autocrlf false`)
 
     core.addPath(`C:\\cygwin64\\bin`)
