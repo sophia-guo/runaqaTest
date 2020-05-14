@@ -1,11 +1,12 @@
 name: "place holder for example"
 on:
   push:
-    branches-ignore:
-      - '**'
+#    branches-ignore:
+#      - '**'
 jobs:
   build:
-    runs-on: ubuntu-16.04 # ubuntu-16.04
+    runs-on: windows-2016 # ubuntu-16.04
     steps:
     - uses: actions/checkout@v1
     - uses: ./
+    - run: printenv

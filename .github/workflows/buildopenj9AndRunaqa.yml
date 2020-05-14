@@ -3,6 +3,8 @@ name: "run-aqa test against build OpenJ9 JDK directly"
 on: # rebuild any PRs and main branch changes
    # pull_request:
   push:
+    branches-ignore:
+      - '**'
 
 jobs:
    build: # make sure build/ci work properly
