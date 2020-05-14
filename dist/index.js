@@ -1291,12 +1291,14 @@ function run() {
         try {
             yield io.mkdirP('C:\cygwin64');
             yield io.mkdirP('c:\cygwin_packages');
-            const cyginSetup = yield tc.downloadTool('https://cygwin.com/setup-x86_64.exe');
-            yield exec.exec(`${cyginSetup} --quiet-mode --download --local-install
+            const cyginSetup = yield tc.downloadTool('https://cygwin.com/setup-x86_64.exe', 'c:\temp\cygwin.exe ');
+            yield exec.exec(`c:\temp\cygwin.exe  --quiet-mode --download --local-install
     --delete-orphans --site  https://mirrors.kernel.org/sourceware/cygwin/
     --local-package-dir "c:\cygwin_packages"
     --root "C:\cygwin64"
     --categories Devel`);
+            yield exec.exec(`c:\temp\cygwin.exe  -q -P autoconf cpio libguile2.0_22 unzip zipcurl curl-debuginfo libcurl-devel libpng15 libpng-devel perl-Text-CSV`);
+            yield exec.exec(`C:/cygwin64/bin/git config --system core.autocrlf false`);
             core.addPath(`C:\cygwin64\bin`);
         }
         catch (error) {
