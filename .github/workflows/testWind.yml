@@ -1,7 +1,7 @@
 name: "place holder for example"
 on:
   push:
-#    branches-ignore:
+ #   branches-ignore:
  #     - '**'
 jobs:
   build:
@@ -15,5 +15,12 @@ jobs:
     - uses: AdoptOpenJDK/install-jdk@v1
       with:
         version: '11'
-        targets: 'JDK_11'
+        source: 'nightly'
+        impl: 'openj9'
+    - uses: sophia-guo/run-aqa@win
+      with:
+        version: '11'
+        jdksource: 'install-jdk'
+        build_list: 'openjdk'
+        target: '_jdk_custom'
     - run: printenv

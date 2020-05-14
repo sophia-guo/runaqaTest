@@ -1267,11 +1267,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(__webpack_require__(470));
 const tc = __importStar(__webpack_require__(533));
 const exec = __importStar(__webpack_require__(986));
-const io = __importStar(__webpack_require__(1));
 const path = __importStar(__webpack_require__(622));
 let tempDirectory = process.env['RUNNER_TEMP'] || '';
 const IS_WINDOWS = process.platform === 'win32';
-let OS = IS_WINDOWS ? 'windows' : process.platform === 'darwin' ? 'mac' : 'linux';
+// const targetOs = IS_WINDOWS ? 'windows' : process.platform === 'darwin' ? 'mac' : 'linux'
 if (!tempDirectory) {
     let baseLocation;
     if (IS_WINDOWS) {
@@ -1289,17 +1288,12 @@ if (!tempDirectory) {
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            yield io.mkdirP('C:\\cygwin64');
-            yield io.mkdirP('C:\\cygwin_packages');
-            exec.exec('ls');
-            const cyginSetup = yield tc.downloadTool('https://cygwin.com/setup-x86_64.exe', 'C:\\temp\\cygwin.exe');
-            yield exec.exec(`C:\\temp\\cygwin.exe  --packages wget,bsdtar,rsync,gnupg,git,autoconf,make,gcc-core,mingw64-x86_64-gcc-core,unzip,zip,cpio,curl,grep,perl --quiet-mode --download --local-install
-    --delete-orphans --site  https://mirrors.kernel.org/sourceware/cygwin/
-    --local-package-dir "C:\\cygwin_packages"
-    --root "C:\\cygwin64"`);
-            //  await exec.exec(`C:\\temp\\cygwin.exe  -q -P autoconf cpio libguile2.0_22 unzip zipcurl curl-debuginfo libcurl-devel libpng15 libpng-devel`)
-            yield exec.exec(`C:/cygwin64/bin/git config --system core.autocrlf false`);
-            core.addPath(`C:\\cygwin64\\bin`);
+            const antContribFile = yield tc.downloadTool(`https://sourceforge.net/projects/ant-contrib/files/ant-contrib/ant-contrib-1.0b2/ant-contrib-1.0b2-bin.zip/download`);
+            yield tc.extractZip(`${antContribFile}`, `${process.env.ANT_HOME}`);
+            core.info(`the ant_home path is ${process.env.ANT_HOME}`);
+            yield exec.exec(`ls ${process.env.ANT_HOME}`);
+            yield tc.extractZip(`${antContribFile}`, `${process.env.ANT_HOME}\\lib`);
+            yield exec.exec(`ls ${process.env.ANT_HOME}\\lib`);
         }
         catch (error) {
             core.setFailed(error.message);
