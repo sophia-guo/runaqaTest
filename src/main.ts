@@ -24,18 +24,19 @@ if (!tempDirectory) {
 
 async function run(): Promise<void> {
   try {
-    await io.mkdirP('C:\cygwin64')
-    await io.mkdirP('c:\cygwin_packages')
-    const cyginSetup = await tc.downloadTool('https://cygwin.com/setup-x86_64.exe', 'c:\temp\cygwin.exe ')
-    await exec.exec(`c:\temp\cygwin.exe  --quiet-mode --download --local-install
+    await io.mkdirP('C:\\cygwin64')
+    await io.mkdirP('c:\\cygwin_packages')
+    exec.exec('ls')
+    const cyginSetup = await tc.downloadTool('https://cygwin.com/setup-x86_64.exe', 'c:\\temp\\cygwin.exe ')
+    await exec.exec(`c:\\temp\\cygwin.exe  --quiet-mode --download --local-install
     --delete-orphans --site  https://mirrors.kernel.org/sourceware/cygwin/
-    --local-package-dir "c:\cygwin_packages"
+    --local-package-dir "c:\\cygwin_packages"
     --root "C:\cygwin64"
     --categories Devel`)
-    await exec.exec(`c:\temp\cygwin.exe  -q -P autoconf cpio libguile2.0_22 unzip zipcurl curl-debuginfo libcurl-devel libpng15 libpng-devel perl-Text-CSV`)
+    await exec.exec(`c:\\temp\\cygwin.exe  -q -P autoconf cpio libguile2.0_22 unzip zipcurl curl-debuginfo libcurl-devel libpng15 libpng-devel perl-Text-CSV`)
     await exec.exec(`C:/cygwin64/bin/git config --system core.autocrlf false`)
 
-    core.addPath(`C:\cygwin64\bin`)
+    core.addPath(`C:\\cygwin64\\bin`)
   } catch (error) {
     core.setFailed(error.message)
   }

@@ -1289,17 +1289,18 @@ if (!tempDirectory) {
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            yield io.mkdirP('C:\cygwin64');
-            yield io.mkdirP('c:\cygwin_packages');
-            const cyginSetup = yield tc.downloadTool('https://cygwin.com/setup-x86_64.exe', 'c:\temp\cygwin.exe ');
-            yield exec.exec(`c:\temp\cygwin.exe  --quiet-mode --download --local-install
+            yield io.mkdirP('C:\\cygwin64');
+            yield io.mkdirP('c:\\cygwin_packages');
+            exec.exec('ls');
+            const cyginSetup = yield tc.downloadTool('https://cygwin.com/setup-x86_64.exe', 'c:\\temp\\cygwin.exe ');
+            yield exec.exec(`c:\\temp\\cygwin.exe  --quiet-mode --download --local-install
     --delete-orphans --site  https://mirrors.kernel.org/sourceware/cygwin/
-    --local-package-dir "c:\cygwin_packages"
+    --local-package-dir "c:\\cygwin_packages"
     --root "C:\cygwin64"
     --categories Devel`);
-            yield exec.exec(`c:\temp\cygwin.exe  -q -P autoconf cpio libguile2.0_22 unzip zipcurl curl-debuginfo libcurl-devel libpng15 libpng-devel perl-Text-CSV`);
+            yield exec.exec(`c:\\temp\\cygwin.exe  -q -P autoconf cpio libguile2.0_22 unzip zipcurl curl-debuginfo libcurl-devel libpng15 libpng-devel perl-Text-CSV`);
             yield exec.exec(`C:/cygwin64/bin/git config --system core.autocrlf false`);
-            core.addPath(`C:\cygwin64\bin`);
+            core.addPath(`C:\\cygwin64\\bin`);
         }
         catch (error) {
             core.setFailed(error.message);
