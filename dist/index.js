@@ -1292,7 +1292,7 @@ function run() {
             yield io.mkdirP('C:\\cygwin64');
             yield io.mkdirP('C:\\cygwin_packages');
             exec.exec('ls');
-            const cyginSetup = yield tc.downloadTool('https://cygwin.com/setup-x86_64.exe', 'C:\\temp\\cygwin.exe ');
+            const cyginSetup = yield tc.downloadTool('https://cygwin.com/setup-x86_64.exe', 'C:\\temp\\cygwin.exe');
             yield exec.exec(`C:\\temp\\cygwin.exe  --quiet-mode --download --local-install
     --delete-orphans --site  https://mirrors.kernel.org/sourceware/cygwin/
     --local-package-dir "C:\\cygwin_packages"
