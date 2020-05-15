@@ -1,6 +1,7 @@
 name: "place holder for example"
 on:
-  pull-request:
+  pull_request:
+  
 jobs:
   build:
     runs-on: ubuntu-16.04 # ubuntu-16.04
