@@ -37,14 +37,7 @@ async function run(): Promise<void> {
     process.chdir('tctestdir')
     await exec.exec('ls')
   } else if (`${targetOs}` === 'linux') {
-    await exec.exec(`sudo tar -xzf ${bootjdkJar} -C ./bootjdk --strip=1`)
-    process.chdir('bootjdk')
     await exec.exec('ls')
-    process.chdir(`${workDir}`)
-    await tc.extractTar(`${bootjdkJar}`, `./tctestdir`)
-    process.chdir('tctestdir')
-    await exec.exec('ls')
-    process.chdir(`${workDir}`)
   } else {
     await io.mkdirP('C:\\cygwin64')
     await io.mkdirP('C:\\cygwin_packages')
@@ -59,7 +52,8 @@ async function run(): Promise<void> {
     const tempDir = path.join(tempDirectory, 'temp_' + Math.floor(Math.random() * 2000000000))
     await tc.extractZip(bootjdkJar, `${tempDir}`)
     const tempJDKDir = path.join(tempDir, fs.readdirSync(tempDir)[0])
-    await io.mv(`${tempJDKDir}`, `${workDir}/bootjdk`)
+    await exec.exec(`mv ${tempJDKDir}/* ${workDir}/bootjdk`)
+    process.chdir(`${workDir}/bootjdk`)
     await exec.exec('ls')
   }
 }

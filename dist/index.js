@@ -1304,14 +1304,7 @@ function run() {
             yield exec.exec('ls');
         }
         else if (`${targetOs}` === 'linux') {
-            yield exec.exec(`sudo tar -xzf ${bootjdkJar} -C ./bootjdk --strip=1`);
-            process.chdir('bootjdk');
             yield exec.exec('ls');
-            process.chdir(`${workDir}`);
-            yield tc.extractTar(`${bootjdkJar}`, `./tctestdir`);
-            process.chdir('tctestdir');
-            yield exec.exec('ls');
-            process.chdir(`${workDir}`);
         }
         else {
             yield io.mkdirP('C:\\cygwin64');
@@ -1327,7 +1320,8 @@ function run() {
             const tempDir = path.join(tempDirectory, 'temp_' + Math.floor(Math.random() * 2000000000));
             yield tc.extractZip(bootjdkJar, `${tempDir}`);
             const tempJDKDir = path.join(tempDir, fs.readdirSync(tempDir)[0]);
-            yield io.mv(`${tempJDKDir}`, `${workDir}/bootjdk`);
+            yield exec.exec(`mv ${tempJDKDir}/* ${workDir}/bootjdk`);
+            process.chdir(`${workDir}/bootjdk`);
             yield exec.exec('ls');
         }
     });
