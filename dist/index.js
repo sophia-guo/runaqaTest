@@ -1269,6 +1269,7 @@ const tc = __importStar(__webpack_require__(533));
 const exec = __importStar(__webpack_require__(986));
 const io = __importStar(__webpack_require__(1));
 const path = __importStar(__webpack_require__(622));
+const fs = __importStar(__webpack_require__(747));
 let tempDirectory = process.env['RUNNER_TEMP'] || '';
 const IS_WINDOWS = process.platform === 'win32';
 const targetOs = IS_WINDOWS ? 'windows' : process.platform === 'darwin' ? 'mac' : 'linux';
@@ -1311,10 +1312,6 @@ function run() {
             process.chdir('tctestdir');
             yield exec.exec('ls');
             process.chdir(`${workDir}`);
-            yield tc.extractTar(`${bootjdkJar}`, `./tctestdirWithStrip`, '-xz --strip=1');
-            process.chdir('tctestdirWithStrip');
-            yield exec.exec('ls');
-            process.chdir(`${workDir}`);
         }
         else {
             yield io.mkdirP('C:\\cygwin64');
@@ -1327,8 +1324,10 @@ function run() {
             //  await exec.exec(`C:\\temp\\cygwin.exe  -q -P autoconf cpio libguile2.0_22 unzip zipcurl curl-debuginfo libcurl-devel libpng15 libpng-devel`)
             yield exec.exec(`C:/cygwin64/bin/git config --system core.autocrlf false`);
             core.addPath(`C:\\cygwin64\\bin`);
-            tc.extractZip(`${bootjdkJar}`, `./bootjdk`);
-            process.chdir('bootjdk');
+            const tempDir = path.join(tempDirectory, 'temp_' + Math.floor(Math.random() * 2000000000));
+            yield tc.extractZip(bootjdkJar, `${tempDir}`);
+            const tempJDKDir = path.join(tempDir, fs.readdirSync(tempDir)[0]);
+            yield io.mv(`${tempJDKDir}`, `${workDir}/bootjdk`);
             yield exec.exec('ls');
         }
     });

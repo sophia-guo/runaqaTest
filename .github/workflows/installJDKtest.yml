@@ -3,8 +3,8 @@ name: "run-aqa custom_target against AdoptOpenJDK OpenJ9"
 on: # rebuild any PRs and main branch changes
    # pull_request:
   push:
-   # branches-ignore:
-    #  - '**'
+    branches-ignore:
+      - '**'
 
 jobs:
   build:

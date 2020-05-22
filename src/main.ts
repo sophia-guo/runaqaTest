@@ -3,6 +3,7 @@ import * as tc from '@actions/tool-cache'
 import * as exec from '@actions/exec'
 import * as io from '@actions/io'
 import * as path from 'path'
+import * as fs from 'fs'
 
 let tempDirectory = process.env['RUNNER_TEMP'] || ''
 const IS_WINDOWS = process.platform === 'win32'
@@ -44,10 +45,6 @@ async function run(): Promise<void> {
     process.chdir('tctestdir')
     await exec.exec('ls')
     process.chdir(`${workDir}`)
-    await tc.extractTar(`${bootjdkJar}`, `./tctestdirWithStrip`, '-xz --strip=1')
-    process.chdir('tctestdirWithStrip')
-    await exec.exec('ls')
-    process.chdir(`${workDir}`)
   } else {
     await io.mkdirP('C:\\cygwin64')
     await io.mkdirP('C:\\cygwin_packages')
@@ -59,8 +56,10 @@ async function run(): Promise<void> {
   //  await exec.exec(`C:\\temp\\cygwin.exe  -q -P autoconf cpio libguile2.0_22 unzip zipcurl curl-debuginfo libcurl-devel libpng15 libpng-devel`)
     await exec.exec(`C:/cygwin64/bin/git config --system core.autocrlf false`)
     core.addPath(`C:\\cygwin64\\bin`)
-    tc.extractZip(`${bootjdkJar}`, `./bootjdk`)
-    process.chdir('bootjdk')
+    const tempDir = path.join(tempDirectory, 'temp_' + Math.floor(Math.random() * 2000000000))
+    await tc.extractZip(bootjdkJar, `${tempDir}`)
+    const tempJDKDir = path.join(tempDir, fs.readdirSync(tempDir)[0])
+    await io.mv(`${tempJDKDir}`, `${workDir}/bootjdk`)
     await exec.exec('ls')
   }
 }
