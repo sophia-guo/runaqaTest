@@ -21,6 +21,6 @@ jobs:
         source: 'nightly'
         impl: 'openj9'
     - uses: actions/upload-artifact@v2
-       with:
-         name: test_output
-         path: ./**/*.log/
+      with:
+        name: test_output
+        path: ./**/*.log/
