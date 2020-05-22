@@ -20,3 +20,7 @@ jobs:
         version: '11'
         source: 'nightly'
         impl: 'openj9'
+    - uses: actions/upload-artifact@v2
+       with:
+         name: test_output
+         path: ./**/*.log/
