@@ -13,10 +13,10 @@ jobs:
       fail-fast: false
       matrix:
         os: [windows-2016, ubuntu-latest, macos-latest]
-     steps:
-     - uses: actions/checkout@v1
-     - uses: sophia-guo/install-jdk@test
-       with:
-         version: '11'
-         source: 'nightly'
-         impl: 'openj9'
+    steps:
+    - uses: actions/checkout@v1
+    - uses: sophia-guo/install-jdk@test
+      with:
+        version: '11'
+        source: 'nightly'
+        impl: 'openj9'
