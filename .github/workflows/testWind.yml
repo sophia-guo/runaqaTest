@@ -12,15 +12,9 @@ jobs:
         os: [windows-2016] #[ubuntu-latest, macos-latest]
     steps:
     - uses: actions/checkout@v1
-    - uses: AdoptOpenJDK/install-jdk@v1
-      with:
-        version: '11'
-        source: 'nightly'
-        impl: 'openj9'
-    - uses: sophia-guo/run-aqa@win
-      with:
-        version: '11'
-        jdksource: 'install-jdk'
-        build_list: 'openjdk'
-        target: '_jdk_custom'
+    - uses: sophia-guo/build-jdk-openj9@win
+      id: buildJDK
+      with: 
+        version: 11
+    - run: ${{ steps.buildJDK.outputs.BuildJDKDir }}/bin/java -version
     - run: printenv
