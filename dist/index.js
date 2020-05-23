@@ -1264,12 +1264,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const core = __importStar(__webpack_require__(470));
 const tc = __importStar(__webpack_require__(533));
 const exec = __importStar(__webpack_require__(986));
 const io = __importStar(__webpack_require__(1));
 const path = __importStar(__webpack_require__(622));
-const fs = __importStar(__webpack_require__(747));
 let tempDirectory = process.env['RUNNER_TEMP'] || '';
 const IS_WINDOWS = process.platform === 'win32';
 const targetOs = IS_WINDOWS ? 'windows' : process.platform === 'darwin' ? 'mac' : 'linux';
@@ -1290,40 +1288,16 @@ if (!tempDirectory) {
 }
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
-        const bootjdkJar = yield tc.downloadTool(`https://api.adoptopenjdk.net/v3/binary/latest/13/ga/${targetOs}/x64/jdk/openj9/normal/adoptopenjdk`);
-        io.mkdirP('bootjdk');
-        io.mkdirP('tctestdir');
-        io.mkdirP('tctestdirWithStrip');
-        if (`${targetOs}` === 'mac') {
-            yield exec.exec(`sudo tar -xzf ${bootjdkJar} -C ./bootjdk --strip=3`);
-            process.chdir('bootjdk');
-            yield exec.exec('ls');
-            process.chdir(`${workDir}`);
-            yield tc.extractTar(`${bootjdkJar}`, `./tctestdir`, '-xz --strip=3');
-            process.chdir('tctestdir');
-            yield exec.exec('ls');
-        }
-        else if (`${targetOs}` === 'linux') {
-            yield exec.exec('ls');
-        }
-        else {
-            yield io.mkdirP('C:\\cygwin64');
-            yield io.mkdirP('C:\\cygwin_packages');
-            yield tc.downloadTool('https://cygwin.com/setup-x86_64.exe', 'C:\\temp\\cygwin.exe');
-            yield exec.exec(`C:\\temp\\cygwin.exe  --packages wget,bsdtar,rsync,gnupg,git,autoconf,make,gcc-core,mingw64-x86_64-gcc-core,unzip,zip,cpio,curl,grep,perl --quiet-mode --download --local-install
-    --delete-orphans --site  https://mirrors.kernel.org/sourceware/cygwin/
-    --local-package-dir "C:\\cygwin_packages"
-    --root "C:\\cygwin64"`);
-            //  await exec.exec(`C:\\temp\\cygwin.exe  -q -P autoconf cpio libguile2.0_22 unzip zipcurl curl-debuginfo libcurl-devel libpng15 libpng-devel`)
-            yield exec.exec(`C:/cygwin64/bin/git config --system core.autocrlf false`);
-            core.addPath(`C:\\cygwin64\\bin`);
-            const tempDir = path.join(tempDirectory, 'temp_' + Math.floor(Math.random() * 2000000000));
-            yield tc.extractZip(bootjdkJar, `${tempDir}`);
-            const tempJDKDir = path.join(tempDir, fs.readdirSync(tempDir)[0]);
-            yield exec.exec(`mv ${tempJDKDir}/* ${workDir}/bootjdk`);
-            process.chdir(`${workDir}/bootjdk`);
-            yield exec.exec('ls');
-        }
+        yield io.mkdirP('C:\\cygwin64');
+        yield io.mkdirP('C:\\cygwin_packages');
+        yield tc.downloadTool('https://cygwin.com/setup-x86_64.exe', 'C:\\temp\\cygwin.exe');
+        yield exec.exec(`C:\\temp\\cygwin.exe  --packages wget,bsdtar,rsync,gnupg,git,autoconf,make,gcc-core,mingw64-x86_64-gcc-core,unzip,zip,cpio,curl,grep,perl --quiet-mode --download --local-install
+  --delete-orphans --site  https://mirrors.kernel.org/sourceware/cygwin/
+  --local-package-dir "C:\\cygwin_packages"
+  --root "C:\\cygwin64"`);
+        //  await exec.exec(`C:\\temp\\cygwin.exe  -q -P autoconf cpio libguile2.0_22 unzip zipcurl curl-debuginfo libcurl-devel libpng15 libpng-devel`)
+        yield tc.downloadTool(`http://releases.llvm.org/7.0.0/LLVM-7.0.0-win64.exe`, 'C:\\temp\\llvm.exe');
+        yield exec.exec(`C:\\temp\\llvm.exe`);
     });
 }
 run();

@@ -24,38 +24,16 @@ if (!tempDirectory) {
 }
 
 async function run(): Promise<void> {
-  const bootjdkJar = await tc.downloadTool(`https://api.adoptopenjdk.net/v3/binary/latest/13/ga/${targetOs}/x64/jdk/openj9/normal/adoptopenjdk`)
-  io.mkdirP('bootjdk')
-  io.mkdirP('tctestdir')
-  io.mkdirP('tctestdirWithStrip')
-  if (`${targetOs}` === 'mac') {
-    await exec.exec(`sudo tar -xzf ${bootjdkJar} -C ./bootjdk --strip=3`)
-    process.chdir('bootjdk')
-    await exec.exec('ls')
-    process.chdir(`${workDir}`)
-    await tc.extractTar(`${bootjdkJar}`, `./tctestdir`, '-xz --strip=3')
-    process.chdir('tctestdir')
-    await exec.exec('ls')
-  } else if (`${targetOs}` === 'linux') {
-    await exec.exec('ls')
-  } else {
-    await io.mkdirP('C:\\cygwin64')
-    await io.mkdirP('C:\\cygwin_packages')
-    await tc.downloadTool('https://cygwin.com/setup-x86_64.exe', 'C:\\temp\\cygwin.exe')
-    await exec.exec(`C:\\temp\\cygwin.exe  --packages wget,bsdtar,rsync,gnupg,git,autoconf,make,gcc-core,mingw64-x86_64-gcc-core,unzip,zip,cpio,curl,grep,perl --quiet-mode --download --local-install
-    --delete-orphans --site  https://mirrors.kernel.org/sourceware/cygwin/
-    --local-package-dir "C:\\cygwin_packages"
-    --root "C:\\cygwin64"`)
-  //  await exec.exec(`C:\\temp\\cygwin.exe  -q -P autoconf cpio libguile2.0_22 unzip zipcurl curl-debuginfo libcurl-devel libpng15 libpng-devel`)
-    await exec.exec(`C:/cygwin64/bin/git config --system core.autocrlf false`)
-    core.addPath(`C:\\cygwin64\\bin`)
-    const tempDir = path.join(tempDirectory, 'temp_' + Math.floor(Math.random() * 2000000000))
-    await tc.extractZip(bootjdkJar, `${tempDir}`)
-    const tempJDKDir = path.join(tempDir, fs.readdirSync(tempDir)[0])
-    await exec.exec(`mv ${tempJDKDir}/* ${workDir}/bootjdk`)
-    process.chdir(`${workDir}/bootjdk`)
-    await exec.exec('ls')
-  }
+  await io.mkdirP('C:\\cygwin64')
+  await io.mkdirP('C:\\cygwin_packages')
+  await tc.downloadTool('https://cygwin.com/setup-x86_64.exe', 'C:\\temp\\cygwin.exe')
+  await exec.exec(`C:\\temp\\cygwin.exe  --packages wget,bsdtar,rsync,gnupg,git,autoconf,make,gcc-core,mingw64-x86_64-gcc-core,unzip,zip,cpio,curl,grep,perl --quiet-mode --download --local-install
+  --delete-orphans --site  https://mirrors.kernel.org/sourceware/cygwin/
+  --local-package-dir "C:\\cygwin_packages"
+  --root "C:\\cygwin64"`)
+//  await exec.exec(`C:\\temp\\cygwin.exe  -q -P autoconf cpio libguile2.0_22 unzip zipcurl curl-debuginfo libcurl-devel libpng15 libpng-devel`)
+  await tc.downloadTool(`http://releases.llvm.org/7.0.0/LLVM-7.0.0-win64.exe`, 'C:\\temp\\llvm.exe')
+  await exec.exec(`C:\\temp\\llvm.exe`)
 }
 
 run()
