@@ -1,8 +1,9 @@
+
 name: "place holder for example"
 on:
   push:
-   # branches-ignore:
-   #   - '**'
+    # branches-ignore:
+    #   - '**'
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -13,6 +14,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - uses: sophia-guo/build-jdk-openj9@win
-      with:
-        version: '11'
-    - run: printenv
+      id: buildJDK
+      with: 
+        version: 11
+    - run: ${{ steps.buildJDK.outputs.BuildJDKDir }}/bin/java -version
