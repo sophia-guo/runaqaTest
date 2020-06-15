@@ -1,20 +1,22 @@
-name: "build-test"
-on: # rebuild any PRs and main branch changes
+name: "place holder for example"
+on:
   push:
+    # branches-ignore:
+    #   - '**'
 jobs:
-  build: # make sure build/ci work properly
+  build:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
+        os: [windows-2016] #[ubuntu-latest, macos-latest]
     steps:
     - uses: actions/checkout@v1
-    - uses: sophia-guo/runaqa@v1
-      with:
+    - uses: ./
+    - uses: sophia-guo/run-aqa@checkif
+      id: buildJDK
+      with: 
         version: '11'
         build_list: 'openjdk'
-        target: '_jdk_custom'
-      
-        
-        
+        target: '_jdk_math'
+        git jdksource: 'github-hosted'
