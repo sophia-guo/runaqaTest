@@ -10,7 +10,7 @@ jobs:
         os: [windows-2016] #[ubuntu-latest, macos-latest]
     steps:
     - uses: actions/checkout@v1
-    - uses: sophia-guo/test2
+    - uses: sophia-guo/runaqaTest@test2
     - uses: sophia-guo/run-aqa@checkif
       id: buildJDK
       with: 
