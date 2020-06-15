@@ -20,8 +20,4 @@ jobs:
         build_list: 'openjdk'
         target: '_jdk_math'
         jdksource: 'github-hosted'
-    - uses: actions/upload-artifact@v2
-      if: failure()
-      with:
-        name: configure_output
-        path: ./**/config.log
+        
