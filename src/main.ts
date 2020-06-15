@@ -25,6 +25,7 @@ if (!tempDirectory) {
 
 async function run(): Promise<void> {
   core.info(`install cygwin`)
+  core.info(`mkdir cygwin`)
   await io.mkdirP('C:\\cygwin64')
   await io.mkdirP('C:\\cygwin_packages')
   await tc.downloadTool('https://cygwin.com/setup-x86_64.exe', 'C:\\temp\\cygwin.exe')

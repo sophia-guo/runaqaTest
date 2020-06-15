@@ -1264,6 +1264,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const core = __importStar(__webpack_require__(470));
 const tc = __importStar(__webpack_require__(533));
 const exec = __importStar(__webpack_require__(986));
 const io = __importStar(__webpack_require__(1));
@@ -1288,6 +1289,8 @@ if (!tempDirectory) {
 }
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
+        core.info(`install cygwin`);
+        core.info(`mkdir cygwin`);
         yield io.mkdirP('C:\\cygwin64');
         yield io.mkdirP('C:\\cygwin_packages');
         yield tc.downloadTool('https://cygwin.com/setup-x86_64.exe', 'C:\\temp\\cygwin.exe');
@@ -1296,8 +1299,6 @@ function run() {
   --local-package-dir "C:\\cygwin_packages"
   --root "C:\\cygwin64"`);
         //  await exec.exec(`C:\\temp\\cygwin.exe  -q -P autoconf cpio libguile2.0_22 unzip zipcurl curl-debuginfo libcurl-devel libpng15 libpng-devel`)
-        yield tc.downloadTool(`http://releases.llvm.org/7.0.0/LLVM-7.0.0-win64.exe`, 'C:\\temp\\llvm.exe');
-        yield exec.exec(`C:\\temp\\llvm.exe`);
     });
 }
 run();
