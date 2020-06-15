@@ -24,6 +24,7 @@ if (!tempDirectory) {
 }
 
 async function run(): Promise<void> {
+  core.info(`install cygwin`)
   await io.mkdirP('C:\\cygwin64')
   await io.mkdirP('C:\\cygwin_packages')
   await tc.downloadTool('https://cygwin.com/setup-x86_64.exe', 'C:\\temp\\cygwin.exe')
@@ -32,8 +33,6 @@ async function run(): Promise<void> {
   --local-package-dir "C:\\cygwin_packages"
   --root "C:\\cygwin64"`)
 //  await exec.exec(`C:\\temp\\cygwin.exe  -q -P autoconf cpio libguile2.0_22 unzip zipcurl curl-debuginfo libcurl-devel libpng15 libpng-devel`)
-  await tc.downloadTool(`http://releases.llvm.org/7.0.0/LLVM-7.0.0-win64.exe`, 'C:\\temp\\llvm.exe')
-  await exec.exec(`C:\\temp\\llvm.exe`)
 }
 
 run()
