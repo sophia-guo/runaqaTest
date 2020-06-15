@@ -1,8 +1,6 @@
 name: "place holder for example"
 on:
   push:
-    branches-ignore:
-      - '**'
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -12,7 +10,7 @@ jobs:
         os: [windows-2016] #[ubuntu-latest, macos-latest]
     steps:
     - uses: actions/checkout@v1
-    - uses: ./
+    - uses: sophia-guo/test2
     - uses: sophia-guo/run-aqa@checkif
       id: buildJDK
       with: 
