@@ -1294,7 +1294,7 @@ function run() {
         yield io.mkdirP('C:\\cygwin64');
         yield io.mkdirP('C:\\cygwin_packages');
         yield tc.downloadTool('https://cygwin.com/setup-x86_64.exe', 'C:\\temp\\cygwin.exe');
-        yield exec.exec(`C:\\temp\\cygwin.exe  --packages wget,bsdtar,rsync,gnupg,git,autoconf,make,gcc-core,mingw64-x86_64-gcc-core,unzip,zip,cpio,curl,grep,perl --quiet-mode --download --local-install
+        yield exec.exec(`C:\\temp\\cygwin.exe  --packages cygwin:3.1.4-1,wget,bsdtar,rsync,gnupg,git,autoconf,make,gcc-core,mingw64-x86_64-gcc-core,unzip,zip,cpio,curl,grep,perl --quiet-mode --download --local-install
   --delete-orphans --site  https://mirrors.kernel.org/sourceware/cygwin/
   --local-package-dir "C:\\cygwin_packages"
   --root "C:\\cygwin64"`);
