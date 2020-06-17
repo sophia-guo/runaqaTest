@@ -24,14 +24,15 @@ if (!tempDirectory) {
 }
 
 async function run(): Promise<void> {
-  let jdkBootDir = ''
-
+  let jdkBootDir = 'dd'
+  core.info(`jdkboot DIR is ${jdkBootDir}`)
   const bootJDKVersion = '13'
   if (`JAVA_HOME_${bootJDKVersion}_X64` in process.env) {
     jdkBootDir = process.env[`JAVA_HOME_${bootJDKVersion}_X86`] as string
+    core.info(`JAVA_HOME_13_X64 is in here`)
   }
   core.info(`jdkboot DIR is ${jdkBootDir}`)
-  if (IS_WINDOWS) {
+/*   if (IS_WINDOWS) {
     core.info(`install cygwin`)
     core.info(`mkdir cygwin`)
     await io.mkdirP('C:\\cygwin64')
@@ -41,7 +42,7 @@ async function run(): Promise<void> {
     --delete-orphans --site  https://mirrors.kernel.org/sourceware/cygwin/
     --local-package-dir "C:\\cygwin_packages"
     --root "C:\\cygwin64"`)
-  }
+  } */
 //  await exec.exec(`C:\\temp\\cygwin.exe  -q -P autoconf cpio libguile2.0_22 unzip zipcurl curl-debuginfo libcurl-devel libpng15 libpng-devel`)
 }
 
