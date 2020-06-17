@@ -100,8 +100,8 @@ function run() {
         const bootJDKVersion = '13';
         if (`JAVA_HOME_${bootJDKVersion}_X64` in process.env) {
             core.info(`
-    inside bootjid is ${process.env[`JAVA_HOME_${bootJDKVersion}_X86`]}`);
-            jdkBootDir = process.env[`JAVA_HOME_${bootJDKVersion}_X86`] || '';
+    inside bootjid is ${process.env[`JAVA_HOME_${bootJDKVersion}_X64`]}`);
+            jdkBootDir = process.env[`JAVA_HOME_${bootJDKVersion}_X64`] || '';
             core.info(`JAVA_HOME_13_X64 is in here`);
             core.info(`jdkboot DIR insdied is ${jdkBootDir}`);
             test = 'new test';
