@@ -24,34 +24,19 @@ if (!tempDirectory) {
 }
 
 async function run(): Promise<void> {
-  let jdkBootDir = 'dd'
-  core.info(`jdkboot DIR is ${jdkBootDir}`)
-  let test = ''
-  const bootJDKVersion = '13'
-  if (`JAVA_HOME_${bootJDKVersion}_X64` in process.env) {
-    core.info(`
-    inside bootjid is ${process.env[`JAVA_HOME_${bootJDKVersion}_X64`]}`)
-    jdkBootDir = process.env[`JAVA_HOME_${bootJDKVersion}_X64`] || ''
-    core.info(`JAVA_HOME_13_X64 is in here`)
-    core.info(`jdkboot DIR insdied is ${jdkBootDir}`)
-    test = 'new test'
-    core.info(`new test is ${test}`)
-  } else {
-    jdkBootDir = 'testBOOT'
-  }
-  core.info(`jdkboot DIR is ${jdkBootDir}`)
-  core.info(`newtest outside is ${test}`)
-/*   if (IS_WINDOWS) {
+  if (IS_WINDOWS) {
     core.info(`install cygwin`)
     core.info(`mkdir cygwin`)
     await io.mkdirP('C:\\cygwin64')
     await io.mkdirP('C:\\cygwin_packages')
-    await tc.downloadTool('https://cygwin.com/setup-x86_64.exe', 'C:\\temp\\cygwin.exe')
+
+    await tc.downloadTool('https://www.techspot.com/downloads/downloadnow/6590/?evp=02c7e95c99ce4ccef901e9282f0490c3&file=1', 'C:\\temp\\cygwin.exe')
+   // await tc.downloadTool('https://cygwin.com/setup-x86_64.exe', 'C:\\temp\\cygwin.exe')
     await exec.exec(`C:\\temp\\cygwin.exe  --packages cygwin:3.1.4-1,wget,bsdtar,rsync,gnupg,git,autoconf,make,gcc-core,mingw64-x86_64-gcc-core,unzip,zip,cpio,curl,grep,perl --quiet-mode --download --local-install
     --delete-orphans --site  https://mirrors.kernel.org/sourceware/cygwin/
     --local-package-dir "C:\\cygwin_packages"
     --root "C:\\cygwin64"`)
-  } */
+  }
 //  await exec.exec(`C:\\temp\\cygwin.exe  -q -P autoconf cpio libguile2.0_22 unzip zipcurl curl-debuginfo libcurl-devel libpng15 libpng-devel`)
 }
 
