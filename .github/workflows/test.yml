@@ -10,4 +10,6 @@ jobs:
         os: [windows-2016, ubuntu-latest, macos-latest]
     steps:
     - uses: actions/checkout@v1
+    - run: printenv
     - uses: sophia-guo/runaqaTest@test2
+    - run: printenv
