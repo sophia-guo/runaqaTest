@@ -100,6 +100,7 @@ function run() {
         if (`JAVA_HOME_${bootJDKVersion}_X64` in process.env) {
             jdkBootDir = process.env[`JAVA_HOME_${bootJDKVersion}_X86`];
             core.info(`JAVA_HOME_13_X64 is in here`);
+            core.info(`jdkboot DIR insdied is ${jdkBootDir}`);
         }
         core.info(`jdkboot DIR is ${jdkBootDir}`);
         /*   if (IS_WINDOWS) {
