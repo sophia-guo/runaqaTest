@@ -13,11 +13,4 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - uses: ./
-    - uses: sophia-guo/run-aqa@checkif
-      id: buildJDK
-      with: 
-        version: '11'
-        build_list: 'openjdk'
-        target: '_jdk_math'
-        jdksource: 'github-hosted'
-        
+    

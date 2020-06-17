@@ -1289,15 +1289,23 @@ if (!tempDirectory) {
 }
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
-        core.info(`install cygwin`);
-        core.info(`mkdir cygwin`);
-        yield io.mkdirP('C:\\cygwin64');
-        yield io.mkdirP('C:\\cygwin_packages');
-        yield tc.downloadTool('https://cygwin.com/setup-x86_64.exe', 'C:\\temp\\cygwin.exe');
-        yield exec.exec(`C:\\temp\\cygwin.exe  --packages cygwin:3.1.4-1,wget,bsdtar,rsync,gnupg,git,autoconf,make,gcc-core,mingw64-x86_64-gcc-core,unzip,zip,cpio,curl,grep,perl --quiet-mode --download --local-install
-  --delete-orphans --site  https://mirrors.kernel.org/sourceware/cygwin/
-  --local-package-dir "C:\\cygwin_packages"
-  --root "C:\\cygwin64"`);
+        let jdkBootDir = '';
+        const bootJDKVersion = '13';
+        if (`JAVA_HOME_${bootJDKVersion}_X86` in process.env) {
+            jdkBootDir = process.env[`JAVA_HOME_${bootJDKVersion}_X86`];
+        }
+        core.info(`jdkboot DIR is ${jdkBootDir}`);
+        if (IS_WINDOWS) {
+            core.info(`install cygwin`);
+            core.info(`mkdir cygwin`);
+            yield io.mkdirP('C:\\cygwin64');
+            yield io.mkdirP('C:\\cygwin_packages');
+            yield tc.downloadTool('https://cygwin.com/setup-x86_64.exe', 'C:\\temp\\cygwin.exe');
+            yield exec.exec(`C:\\temp\\cygwin.exe  --packages cygwin:3.1.4-1,wget,bsdtar,rsync,gnupg,git,autoconf,make,gcc-core,mingw64-x86_64-gcc-core,unzip,zip,cpio,curl,grep,perl --quiet-mode --download --local-install
+    --delete-orphans --site  https://mirrors.kernel.org/sourceware/cygwin/
+    --local-package-dir "C:\\cygwin_packages"
+    --root "C:\\cygwin64"`);
+        }
         //  await exec.exec(`C:\\temp\\cygwin.exe  -q -P autoconf cpio libguile2.0_22 unzip zipcurl curl-debuginfo libcurl-devel libpng15 libpng-devel`)
     });
 }
