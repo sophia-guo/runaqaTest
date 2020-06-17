@@ -27,7 +27,7 @@ async function run(): Promise<void> {
   let jdkBootDir = ''
 
   const bootJDKVersion = '13'
-  if (`JAVA_HOME_${bootJDKVersion}_X86` in process.env) {
+  if (`JAVA_HOME_${bootJDKVersion}_X64` in process.env) {
     jdkBootDir = process.env[`JAVA_HOME_${bootJDKVersion}_X86`] as string
   }
   core.info(`jdkboot DIR is ${jdkBootDir}`)
