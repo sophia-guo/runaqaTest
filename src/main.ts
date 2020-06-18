@@ -24,18 +24,15 @@ if (!tempDirectory) {
 }
 
 async function run(): Promise<void> {
+  let jdkBootDir = ''
   if (IS_WINDOWS) {
-    core.info(`install cygwin`)
-    core.info(`mkdir cygwin`)
-    await io.mkdirP('C:\\cygwin64')
-    await io.mkdirP('C:\\cygwin_packages')
-
-    await tc.downloadTool('https://www.techspot.com/downloads/downloadnow/6590/?evp=02c7e95c99ce4ccef901e9282f0490c3&file=1', 'C:\\temp\\cygwin.exe')
-   // await tc.downloadTool('https://cygwin.com/setup-x86_64.exe', 'C:\\temp\\cygwin.exe')
-    await exec.exec(`C:\\temp\\cygwin.exe  --packages cygwin:3.1.4-1,wget,bsdtar,rsync,gnupg,git,autoconf,make,gcc-core,mingw64-x86_64-gcc-core,unzip,zip,cpio,curl,grep,perl --quiet-mode --download --local-install
-    --delete-orphans --site  https://mirrors.kernel.org/sourceware/cygwin/
-    --local-package-dir "C:\\cygwin_packages"
-    --root "C:\\cygwin64"`)
+    if (`JAVA_HOME_13_X64` in process.env) {
+      jdkBootDir = process.env[`JAVA_HOME_13_X64`] as string
+      core.info(`jdkbootDie is ${jdkBootDir}`)
+      jdkBootDir = jdkBootDir.replace(/\s/g, '')
+      jdkBootDir = jdkBootDir.replace(/ProgramFiles/g, 'Progra~1')
+      core.info(`jdkbootDie is ${jdkBootDir}`)
+    }
   }
 //  await exec.exec(`C:\\temp\\cygwin.exe  -q -P autoconf cpio libguile2.0_22 unzip zipcurl curl-debuginfo libcurl-devel libpng15 libpng-devel`)
 }
