@@ -10,6 +10,16 @@ jobs:
         os: [windows-2016] #[ubuntu-latest, macos-latest]
     steps:
     - uses: actions/checkout@v1
-    - run: printenv
-    - uses: sophia-guo/runaqaTest@test2
-    - run: printenv
+    - name: Cache Cygwin
+      id: cache-cygwin
+      uses: actions/cache@v2
+      if: contains(${{runner.os}}, 'windows')
+      with:
+        path: cygwin64
+        key: ${{ runner.os }}-cygwin
+    - uses: sophia-guo/build-jdk@cache
+      id: buildJDK
+      with: 
+        javaToBuild: 'jdk14u'
+        cygwin: '${{steps.cache-cygwin.outputs.cache-hit}}'
+    - run: ${{ steps.buildJDK.outputs.BuildJDKDir }}/bin/java -version
