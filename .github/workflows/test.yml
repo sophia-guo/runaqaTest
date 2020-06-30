@@ -19,6 +19,10 @@ jobs:
         key: ${{ runner.os }}-cygwin
         restore-keys: |
           ${{ runner.os }}-cygwin
+    - uses: AdoptOpenJDK/install-jdk@v1
+      with:
+        version: '11'
+        targets: 'JDK_11'
     - name: AQA
       uses: sophia-guo/run-aqa@checkif
       with: 
