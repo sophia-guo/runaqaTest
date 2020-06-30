@@ -27,6 +27,6 @@ jobs:
       uses: sophia-guo/run-aqa@checkif
       with: 
         version: '11'
-        jdksource: 'github-hosted'
+        jdksource: 'install-jdk'
         build_list: 'openjdk'
         target: '_jdk_custom'
