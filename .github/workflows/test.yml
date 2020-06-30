@@ -17,6 +17,8 @@ jobs:
       with:
         path: 'C:\\cygwin64'
         key: ${{ runner.os }}-cygwin
+        restore-keys: |
+          ${{ runner.os }}-cygwin
     - name: AQA
       uses: sophia-guo/run-aqa@checkif
       with: 
