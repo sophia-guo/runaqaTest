@@ -15,11 +15,12 @@ jobs:
       uses: actions/cache@v2
       if: contains(${{runner.os}}, 'windows')
       with:
-        path: cygwin64
+        path: 'C:\\cygwin64'
         key: ${{ runner.os }}-cygwin
-    - uses: sophia-guo/build-jdk@cache
-      id: buildJDK
+    - name: AQA
+      uses: sophia-guo/run-aqa@checkif
       with: 
-        javaToBuild: 'jdk14u'
-        cygwin: '${{steps.cache-cygwin.outputs.cache-hit}}'
-    - run: ${{ steps.buildJDK.outputs.BuildJDKDir }}/bin/java -version
+        version: '11'
+        jdksource: 'github-hosted'
+        build_list: 'openjdk'
+        target: '_jdk_custom'
