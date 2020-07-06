@@ -10,12 +10,21 @@ jobs:
         os: [windows-2016] #[ubuntu-latest, macos-latest]
     steps:
     - uses: actions/checkout@v1
+    - name: Cache Cygwin
+      id: cache-cygwin
+      uses: actions/cache@v2
+      if: contains(${{runner.os}}, 'windows')
+      with:
+        path: 'C:\\cygwin64'
+        key: ${{ runner.os }}-cygwin
+        restore-keys: |
+          ${{ runner.os }}-cygwin
     - uses: AdoptOpenJDK/install-jdk@v1
       with:
         version: '11'
         targets: 'JDK_11'
     - name: AQA
-      uses: sophia-guo/run-aqa@checkif
+      uses: sophia-guo/run-aqa@cach
       with: 
         version: '11'
         jdksource: 'install-jdk'
