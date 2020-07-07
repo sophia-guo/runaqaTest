@@ -24,3 +24,4 @@ jobs:
         javaToBuild: 'jdk14u'
     - run: ${{ steps.buildJDK.outputs.BuildJDKDir }}/bin/java -version  
     - run: printenv
+    - run: printenv
