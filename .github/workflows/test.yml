@@ -7,11 +7,20 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-2016, ubuntu-latest, macos-latest]
+        os: [ubuntu-latest] #[windows-2016, ubuntu-latest, macos-latest]
     steps:
     - uses: actions/checkout@v1
-    - uses: AdoptOpenJDK/install-jdk@v1
+    - name: Cache BootJDK
+      id: Cache-BootJDK
+      uses: actions/cache@v2
       with:
-        version: '11'
-        targets: 'JDK_11'
+        path: ~/BootJDK
+        key: ${{ runner.os }}-BootJDK
+        restore-keys: |
+          ${{ runner.os }}-BootJDK
+    - uses: sophia-guo/build-jdk@cache
+      id: buildJDK
+      with: 
+        javaToBuild: 'jdk14u'
+    - run: ${{ steps.buildJDK.outputs.BuildJDKDir }}/bin/java -version  
     - run: printenv
