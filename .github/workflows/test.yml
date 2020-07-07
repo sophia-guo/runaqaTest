@@ -18,10 +18,7 @@ jobs:
         key: ${{ runner.os }}-BootJDK
         restore-keys: |
           ${{ runner.os }}-BootJDK
-    - uses: sophia-guo/build-jdk@cache
+    - uses: sophia-guo/build-jdk@testCache
       id: buildJDK
       with: 
         javaToBuild: 'jdk14u'
-    - run: ${{ steps.buildJDK.outputs.BuildJDKDir }}/bin/java -version  
-    - run: printenv
-    - run: printenv
