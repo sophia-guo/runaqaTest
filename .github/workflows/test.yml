@@ -12,7 +12,7 @@ jobs:
         javaToBuild: [jdk11u, jdk14u]
     steps:
     - uses: actions/checkout@v1
-    - uses: AdoptOpenJDK/build-jdk@v1
+    - uses: AdoptOpenJDK/build-jdk@master
       id: buildJDK
       with: 
         javaToBuild: ${{ matrix.javaToBuild }}
