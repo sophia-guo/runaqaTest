@@ -5,6 +5,8 @@ on:
 jobs:
   hotspot14:
     runs-on: ${{ matrix.os }}
+    container:
+      image: adoptopenjdk/centos7_build_image
     strategy:
       fail-fast: false
       matrix:
