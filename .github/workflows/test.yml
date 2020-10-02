@@ -1,7 +1,8 @@
 name: "nightly build-jdk nightly"
 on:
   push:
-
+    branches-ignore:
+      - '**'
 jobs:
   hotspot14:
     runs-on: ${{ matrix.os }}
@@ -19,4 +20,4 @@ jobs:
         javaToBuild: ${{ matrix.javaToBuild }}
         impl: ${{ matrix.impl }}
     - run: ${{ steps.buildJDK.outputs.BuildJDKDir }}/bin/java -version
-  
+ 

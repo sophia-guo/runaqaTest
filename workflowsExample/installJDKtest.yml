@@ -1,0 +1,26 @@
+
+name: "run-aqa custom_target against AdoptOpenJDK OpenJ9"
+on: # rebuild any PRs and main branch changes
+   # pull_request:
+  push:
+    branches-ignore:
+      - '**'
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2016, ubuntu-latest, macos-latest]
+    steps:
+    - uses: actions/checkout@v1
+    - uses: sophia-guo/install-jdk@test
+      with:
+        version: '11'
+        source: 'nightly'
+        impl: 'openj9'
+    - uses: actions/upload-artifact@v2
+      with:
+        name: test_output
+        path: ./**/*.log/

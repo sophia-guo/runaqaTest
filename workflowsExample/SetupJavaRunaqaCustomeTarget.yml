@@ -1,0 +1,32 @@
+
+name: "run-aqa custom_target against SetupJava"
+on: # rebuild any PRs and main branch changes
+   # pull_request:
+  push:
+    branches-ignore:
+      - '**'
+
+jobs:
+   build: # make sure build/ci work properly
+     runs-on: ${{ matrix.os }}
+     strategy:
+       fail-fast: false
+       matrix:
+         os: [ubuntu-latest, macos-latest]
+     steps:
+     - uses: actions/checkout@v1
+     - uses: actions/setup-java@v1
+       with:
+         java-version: '14-ea'
+     - name: AQA
+       uses: AdoptOpenJDK/run-aqa@v1
+       with: 
+         version: '14'
+         jdksource: 'install-jdk'
+         build_list: 'openjdk'
+         target: '_jdk_custom'
+     - uses: actions/upload-artifact@v2-preview
+       if: failure()
+       with:
+         name: test_output
+         path: ./**/test_output_*/
