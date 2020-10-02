@@ -1,19 +1,31 @@
-name: Manually triggered workflow
+# name: Manually triggered workflow
+# on:
+#   workflow_dispatch:
+#     inputs:
+#       name:
+#         description: 'Person to greet'
+#         required: true
+#         default: 'Mona the Octocat'
+#       home:
+#         description: 'location'
+#         required: false
+
+# jobs:
+#   say_hello:
+#     runs-on: ubuntu-latest
+#     steps:
+#     - run: |
+#         echo "Hello ${{ github.event.inputs.name }}!"
+#         echo "- in ${{ github.event.inputs.home }}!"
+
+name: "Remove autoTestPR branch"
 on:
-  workflow_dispatch:
-    inputs:
-      name:
-        description: 'Person to greet'
-        required: true
-        default: 'Mona the Octocat'
-      home:
-        description: 'location'
-        required: false
+  push:
 
 jobs:
-  say_hello:
+  rmAutoTestPRBranch:
     runs-on: ubuntu-latest
     steps:
-    - run: |
-        echo "Hello ${{ github.event.inputs.name }}!"
-        echo "- in ${{ github.event.inputs.home }}!"
+      - name: remove auto test PR branch when the PR is closed
+        run: |
+          curl -u github-actions:${{ secrets.GITHUB_TOKEN }} -X DELETE https://api.github.com/repos/sophia-guo/runaqaTest/git/refs/heads/test
