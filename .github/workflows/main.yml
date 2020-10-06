@@ -48,8 +48,7 @@ jobs:
        uses: sophia-guo/run-aqa@PR1
        with:
          build_list: 'openjdk'
-         target: '_jdk_custom'
+         target: '_jdk_util_j9'
          jdksource: 'install-jdk'
          custom_target: test/jdk/java/util/Locale/LocaleCategory.java
-         openjdk_testRepo: 'sophia-guo/openjdk-tests:openjdktesting'
      
