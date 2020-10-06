@@ -48,7 +48,6 @@ jobs:
        uses: sophia-guo/run-aqa@PR1
        with:
          build_list: 'openjdk'
-         target: '_jdk_util_j9'
+         target: '_sanity.regular'
          jdksource: 'install-jdk'
-         custom_target: test/jdk/java/util/Locale/LocaleCategory.java
      
