@@ -51,5 +51,5 @@ jobs:
          target: '_jdk_custom'
          jdksource: 'install-jdk'
          custom_target: test/jdk/java/util/Locale/LocaleCategory.java
-         openjdk_testRepo: 'sophia-guo:openjdktesting'
+         openjdk_testRepo: 'sophia-guo/openjdk-tests:openjdktesting'
      
