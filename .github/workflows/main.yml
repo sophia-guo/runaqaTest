@@ -1,53 +1,177 @@
-# name: Manually triggered workflow
-# on:
-#   workflow_dispatch:
-#     inputs:
-#       name:
-#         description: 'Person to greet'
-#         required: true
-#         default: 'Mona the Octocat'
-#       home:
-#         description: 'location'
-#         required: false
-
-# jobs:
-#   say_hello:
-#     runs-on: ubuntu-latest
-#     steps:
-#     - run: |
-#         echo "Hello ${{ github.event.inputs.name }}!"
-#         echo "- in ${{ github.event.inputs.home }}!"
-
-#name: "Remove autoTestPR branch"
-#on:
-#  push:
-
-#jobs:
-#  rmAutoTestPRBranch:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: remove auto test PR branch when the PR is closed
-#        run: |
-#          curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -X DELETE https://api.github.com/repos/sophia-guo/runaqaTest/git/refs/heads/test
- 
-name: test
+name: run-aqa with openjdk artifact
 on:
   push:
-    
 jobs:
-   build:
-     runs-on: ubuntu-16.04
-     steps:
+  run-aqalinux:
+    env:
+      os: linux
+      artifactID: 21852466
+      githubID: sophia-guo
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        test:
+          - run-aqa functional
+          - run-aqa system
+        include:
+          - test: run-aqa functional
+            build_list: functional
+            target: _sanity
+          - test: run-aqa system
+            build_list: system
+            target: _sanity
+    steps:
      - uses: actions/checkout@v1
-     - uses: AdoptOpenJDK/install-jdk@v1
-       with:
-         version: '11'
-         source: 'nightly'
-         impl: 'openj9'
+     - name: get prebuild jdk image
+       run: |
+         mkdir -p "${HOME}/jdk-${os}-x64-debug"
+         cd "${HOME}/jdk-${os}-x64-debug"
+         curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+         -H "Accept: application/vnd.github.v3+json" \
+         -OLJk "https://api.github.com/repos/${{ env.githubID }}/jdk/actions/artifacts/${{ env.artifactID }}/zip"
+         zipFilename=`find ./ -type f -exec basename {} \;`
+         echo ${zipFilename}
+         unzip ${zipFilename}
+     - name: Unpack jdk
+       run: |
+         mkdir -p "${HOME}/jdk-${os}-x64-debug/jdk-16-internal+0_${os}-x64_bin-debug"
+         tar -xf "${HOME}/jdk-${os}-x64-debug/jdk-16-internal+0_${os}-x64_bin-debug.tar.gz" -C "${HOME}/jdk-${os}-x64-debug/jdk-16-internal+0_${os}-x64_bin-debug"
+     - name: Unpack tests #only needed for jdk test
+       run: |
+         mkdir -p "${HOME}/jdk-${os}-x64-debug/jdk-16-internal+0_${os}-x64_bin-tests-debug"
+         tar -xf "${HOME}/jdk-${os}-x64-debug/jdk-16-internal+0_${os}-x64_bin-tests-debug.tar.gz" -C "${HOME}/jdk-linux-x64-debug/jdk-16-internal+0_${os}-x64_bin-tests-debug"
+     - name: Find root of jdk image dir
+       run: |
+         imageroot=`find ${HOME}/jdk-${os}-x64-debug/jdk-16-internal+0_${os}-x64_bin-debug -name release -type f`
+         echo "imageroot=`dirname ${imageroot}`" >> $GITHUB_ENV
      - name: AQA
-       uses: sophia-guo/run-aqa@PR1
+       uses: AdoptOpenJDK/run-aqa@v1
        with:
-         build_list: 'openjdk'
-         target: '_sanity.regular'
-         jdksource: 'install-jdk'
-     
+         build_list: ${{ matrix.build_list }}
+         target: ${{ matrix.target}}
+       env:
+         TEST_JDK_HOME: ${{ env.imageroot }}
+     - name: Persist run-aqa test
+       if: failure()
+       uses: actions/upload-artifact@v2
+       with:
+          name: ${os}-x64_runaqa_${{ matrix.build_list}}_${{ matrix.target}}_test_output
+          path: ./**/test_output_*/
+  run-aqawindows:
+    env:
+      os: windows
+      artifactID: 21852470
+      githubID: sophia-guo
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        test:
+          - run-aqa functional
+          - run-aqa system
+        include:
+          - test: run-aqa functional
+            build_list: functional
+            target: _sanity
+          - test: run-aqa system
+            build_list: system
+            target: _sanity
+    steps:
+     - uses: actions/checkout@v1
+     - name: Restore cygwin packages from cache
+       id: cygwin
+       uses: actions/cache@v2
+       with:
+         path: ~/cygwin/packages
+         key: cygwin-packages-${{ runner.os }}-v1
+
+     - name: Install cygwin
+       run: |
+         New-Item -Force -ItemType directory -Path "$HOME\cygwin"
+         & curl -L "https://www.cygwin.com/setup-x86_64.exe" -o "$HOME/cygwin/setup-x86_64.exe"
+         Start-Process -FilePath "$HOME\cygwin\setup-x86_64.exe" -ArgumentList "--quiet-mode --packages autoconf,make,zip,unzip --root $HOME\cygwin\cygwin64 --local-package-dir $HOME\cygwin\packages --site http://mirrors.kernel.org/sourceware/cygwin --no-desktop --no-shortcuts --no-startmenu --no-admin" -Wait -NoNewWindow
+     - name: get prebuild jdk image
+       run: |
+         mkdir -p "${HOME}/jdk-${{ env.os }}-x64-debug"
+         cd "${HOME}/jdk-${{ env.os }}-x64-debug"
+         curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -H "Accept: application/vnd.github.v3+json" -OLJk "https://api.github.com/repos/${{ env.githubID }}/jdk/actions/artifacts/${{ env.artifactID }}/zip"
+         unzip jdk-windows-x64-debug_.zip
+     - name: Unpack jdk
+       run: |
+         mkdir -p "${HOME}/jdk-${{ env.os }}-x64-debug/jdk-16-internal+0_${{ env.os }}-x64_bin-debug"
+         tar -xf "${HOME}/jdk-${{ env.os }}-x64-debug/jdk-16-internal+0_${{ env.os }}-x64_bin-debug.zip" -C "${HOME}/jdk-${{ env.os }}-x64-debug/jdk-16-internal+0_${{ env.os }}-x64_bin-debug"
+     - name: Unpack tests #only needed for jdk test
+       run: |
+         mkdir -p "${HOME}/jdk-${{ env.os }}-x64-debug/jdk-16-internal+0_${{ env.os }}-x64_bin-tests-debug"
+         tar -xf "${HOME}/jdk-${{ env.os }}-x64-debug/jdk-16-internal+0_${{ env.os }}-x64_bin-tests-debug.tar.gz" -C "${HOME}/jdk-${{ env.os }}-x64-debug/jdk-16-internal+0_${{ env.os }}-x64_bin-tests-debug"
+     - name: Find root of jdk image dir
+       run: echo ("imageroot=" + (Get-ChildItem -Path $HOME/jdk-${{ env.os }}-x64-debug/jdk-16-internal+0_${{ env.os }}-x64_bin-debug -Filter release -Recurse -ErrorAction SilentlyContinue -Force).DirectoryName) | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8
+     - name: AQA
+       uses: AdoptOpenJDK/run-aqa@v1
+       with:
+         build_list: ${{ matrix.build_list }}
+         target: ${{ matrix.target}}
+       env:
+         TEST_JDK_HOME: ${{ env.imageroot }}
+     - name: Persist run-aqa test
+       if: failure()
+       uses: actions/upload-artifact@v2
+       with:
+          name: ${os}-x64_runaqa_${{ matrix.build_list}}_${{ matrix.target}}_test_output
+          path: ./**/test_output_*/
+  run-aqamacos:
+    env:
+      os: osx
+      artifactID: 21852468
+      githubID: sophia-guo
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        test:
+          - run-aqa functional
+          - run-aqa system
+        include:
+          - test: run-aqa functional
+            build_list: functional
+            target: _sanity
+          - test: run-aqa system
+            build_list: system
+            target: _sanity
+    steps:
+     - uses: actions/checkout@v1
+     - name: get prebuild jdk image
+       run: |
+         mkdir -p "${HOME}/jdk-${os}-x64-debug"
+         cd "${HOME}/jdk-${os}-x64-debug"
+         curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+         -H "Accept: application/vnd.github.v3+json" \
+         -OLJk "https://api.github.com/repos/${{ env.githubID }}/jdk/actions/artifacts/${{ env.artifactID }}/zip"
+         zipFilename=`find ./ -type f -exec basename {} \;`
+         unzip ${zipFilename}
+     - name: Unpack jdk
+       run: |
+         mkdir -p "${HOME}/jdk-${os}-x64-debug/jdk-16-internal+0_${os}-x64_bin-debug"
+         tar -xf "${HOME}/jdk-${os}-x64-debug/jdk-16-internal+0_${os}-x64_bin-debug.tar.gz" -C "${HOME}/jdk-${os}-x64-debug/jdk-16-internal+0_${os}-x64_bin-debug"
+     - name: Unpack tests #only needed for jdk test
+       run: |
+         mkdir -p "${HOME}/jdk-${os}-x64-debug/jdk-16-internal+0_${os}-x64_bin-tests-debug"
+         tar -xf "${HOME}/jdk-${os}-x64-debug/jdk-16-internal+0_${os}-x64_bin-tests-debug.tar.gz" -C "${HOME}/jdk-${os}-x64-debug/jdk-16-internal+0_${os}-x64_bin-tests-debug"
+     - name: Find root of jdk image dir
+       run: |
+         imageroot=`find ${HOME}/jdk-${os}-x64-debug/jdk-16-internal+0_${os}-x64_bin-debug -name release -type f`
+         echo "imageroot=`dirname ${imageroot}`" >> $GITHUB_ENV
+     - name: AQA
+       uses: AdoptOpenJDK/run-aqa@v1
+       with:
+         build_list: ${{ matrix.build_list }}
+         target: ${{ matrix.target}}
+       env:
+         TEST_JDK_HOME: ${{ env.imageroot }}
+     - name: Persist run-aqa test
+       if: failure()
+       uses: actions/upload-artifact@v2
+       with:
+          name: ${os}-x64_runaqa_${{ matrix.build_list}}_${{ matrix.target}}_test_output
+          path: ./**/test_output_*/
