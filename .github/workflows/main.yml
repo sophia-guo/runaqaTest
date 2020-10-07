@@ -1,53 +1,24 @@
-# name: Manually triggered workflow
-# on:
-#   workflow_dispatch:
-#     inputs:
-#       name:
-#         description: 'Person to greet'
-#         required: true
-#         default: 'Mona the Octocat'
-#       home:
-#         description: 'location'
-#         required: false
-
-# jobs:
-#   say_hello:
-#     runs-on: ubuntu-latest
-#     steps:
-#     - run: |
-#         echo "Hello ${{ github.event.inputs.name }}!"
-#         echo "- in ${{ github.event.inputs.home }}!"
-
-#name: "Remove autoTestPR branch"
-#on:
-#  push:
-
-#jobs:
-#  rmAutoTestPRBranch:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: remove auto test PR branch when the PR is closed
-#        run: |
-#          curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -X DELETE https://api.github.com/repos/sophia-guo/runaqaTest/git/refs/heads/test
- 
-name: test
+name: run-aqa with openjdk artifact
 on:
   push:
-    
 jobs:
-   build:
-     runs-on: ubuntu-16.04
-     steps:
-     - uses: actions/checkout@v1
-     - uses: AdoptOpenJDK/install-jdk@v1
-       with:
-         version: '11'
-         source: 'nightly'
-         impl: 'openj9'
-     - name: AQA
-       uses: sophia-guo/run-aqa@PR1
-       with:
-         build_list: 'openjdk'
-         target: '_sanity.regular'
-         jdksource: 'install-jdk'
-     
+  run-aqawindows:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        build_list: [external]
+    steps:
+    - uses: actions/checkout@v1
+    - uses: AdoptOpenJDK/install-jdk@v1
+      with:
+        version: '11'
+        architecture: x64
+    - name: AQA
+      uses: AdoptOpenJDK/run-aqa@v1
+      with: 
+        version: '11'
+        jdksource: 'install-jdk'
+        build_list: ${{ matrix.build_list }}
+        target: '_sanity'

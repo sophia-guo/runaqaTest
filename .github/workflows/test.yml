@@ -3,21 +3,75 @@ on:
   push:
     branches-ignore:
       - '**'
+name: run-aqa with openjdk artifact
+on:
+  push:
+    branches-ignore:
+      - '**'
 jobs:
-  hotspot14:
-    runs-on: ${{ matrix.os }}
+  run-aqawindows:
+    env:
+      os: windows
+    runs-on: windows-latest
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-16.04, macos-10.15]
-        impl: [hotspot, openj9]
-        javaToBuild: [jdk11u, jdk15u]
+        test:
+          - run-aqa functional
+          - run-aqa system
+        include:
+          - test: run-aqa functional
+            build_list: functional
+            target: _sanity
+          - test: run-aqa system
+            build_list: system
+            target: _sanity
     steps:
-    - uses: actions/checkout@v2
-    - uses: sophia-guo/build-jdk@buildfarm
-      id: buildJDK
-      with: 
-        javaToBuild: ${{ matrix.javaToBuild }}
-        impl: ${{ matrix.impl }}
-    - run: ${{ steps.buildJDK.outputs.BuildJDKDir }}/bin/java -version
- 
+     - uses: actions/checkout@v1
+     - name: Restore cygwin packages from cache
+       id: cygwin
+       uses: actions/cache@v2
+       with:
+         path: ~/cygwin/packages
+         key: cygwin-packages-${{ runner.os }}-v1
+
+     - name: Install cygwin
+       run: |
+         New-Item -Force -ItemType directory -Path "$HOME\cygwin"
+         & curl -L "https://www.cygwin.com/setup-x86_64.exe" -o "$HOME/cygwin/setup-x86_64.exe"
+         Start-Process -FilePath "$HOME\cygwin\setup-x86_64.exe" -ArgumentList "--quiet-mode --packages autoconf,make,zip,unzip --root $HOME\cygwin\cygwin64 --local-package-dir $HOME\cygwin\packages --site http://mirrors.kernel.org/sourceware/cygwin --no-desktop --no-shortcuts --no-startmenu --no-admin" -Wait -NoNewWindow
+
+     - name: runaqa test
+       run: |
+         mkdir -p "${HOME}/jdk-${os}-x64-debug"
+         cd "${HOME}/jdk-${os}-x64-debug"
+         curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+         -H "Accept: application/vnd.github.v3+json" \
+         -OLJk https://api.github.com/repos/sophia-guo/jdk/actions/artifacts/21852470/zip
+         zipFilename=`find ./ -type f -exec basename {} \;`
+         unzip ${zipFilename}
+     - name: Unpack jdk
+       run: |
+         mkdir -p "${HOME}/jdk-${os}-x64-debug/jdk-16-internal+0_${os}-x64_bin-debug"
+         tar -xf "${HOME}/jdk-${os}-x64-debug/jdk-16-internal+0_${os}-x64_bin-debug.tar.gz" -C "${HOME}/jdk-${os}-x64-debug/jdk-16-internal+0_${os}-x64_bin-debug"
+     - name: Unpack tests #only needed for jdk test
+       run: |
+         mkdir -p "${HOME}/jdk-${os}-x64-debug/jdk-16-internal+0_${os}-x64_bin-tests-debug"
+         tar -xf "${HOME}/jdk-${os}-x64-debug/jdk-16-internal+0_${os}-x64_bin-tests-debug.tar.gz" -C "${HOME}/jdk-${os}-x64-debug/jdk-16-internal+0_${os}-x64_bin-tests-debug"
+     - name: Find root of jdk image dir
+       run: |
+         imageroot=`find ${HOME}/jdk-${os}-x64-debug/jdk-16-internal+0_${os}-x64_bin-debug -name release -type f`
+         echo "imageroot=`dirname ${imageroot}`" >> $GITHUB_ENV
+     - name: AQA
+       uses: AdoptOpenJDK/run-aqa@v1
+       with:
+         build_list: ${{ matrix.build_list }}
+         target: ${{ matrix.target}}
+       env:
+         TEST_JDK_HOME: ${{ env.imageroot }}
+     - name: Persist run-aqa test
+       if: failure()
+       uses: actions/upload-artifact@v2
+       with:
+          name: ${os}-x64_runaqa_${{ matrix.build_list}}_${{ matrix.target}}_test_output
+          path: ./**/test_output_*/
