@@ -1,14 +1,14 @@
-# name: Manually triggered workflow
-# on:
-#   workflow_dispatch:
-#     inputs:
-#       name:
-#         description: 'Person to greet'
-#         required: true
-#         default: 'Mona the Octocat'
-#       home:
-#         description: 'location'
-#         required: false
+name: Manually triggered workflow
+on:
+  workflow_dispatch:
+  inputs:
+    name:
+      description: 'Person to greet'
+      required: true
+      default: 'Mona the Octocat'
+    home:
+      description: 'location'
+      required: false
 
 # jobs:
 #   say_hello:
@@ -30,24 +30,5 @@
 #        run: |
 #          curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -X DELETE https://api.github.com/repos/sophia-guo/runaqaTest/git/refs/heads/test
  
-name: test
-on:
-  push:
-    
-jobs:
-   build:
-     runs-on: ubuntu-16.04
-     steps:
-     - uses: actions/checkout@v1
-     - uses: AdoptOpenJDK/install-jdk@v1
-       with:
-         version: '11'
-         source: 'nightly'
-         impl: 'openj9'
-     - name: AQA
-       uses: AdoptOpenJDK/run-aqa@v1
-       with:
-         build_list: 'openjdk'
-         target: '_sanity.regular'
-         jdksource: 'install-jdk'
+
      
