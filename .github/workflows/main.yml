@@ -1,34 +1,52 @@
-name: Manually triggered workflow
+name: run-aqa with openjdk artifact docker external tests
 on:
-  workflow_dispatch:
-    inputs:
-      name:
-        description: 'Person to greet'
-        required: true
-        default: 'Mona the Octocat'
-      home:
-        description: 'location'
-        required: false
-
-# jobs:
-#   say_hello:
-#     runs-on: ubuntu-latest
-#     steps:
-#     - run: |
-#         echo "Hello ${{ github.event.inputs.name }}!"
-#         echo "- in ${{ github.event.inputs.home }}!"
-
-#name: "Remove autoTestPR branch"
-#on:
-#  push:
-
-#jobs:
-#  rmAutoTestPRBranch:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: remove auto test PR branch when the PR is closed
-#        run: |
-#          curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" -X DELETE https://api.github.com/repos/sophia-guo/runaqaTest/git/refs/heads/test
- 
-
-     
+  push:
+jobs:
+  run-aqalinux:
+    env:
+      os: linux
+      artifactID: 21852466
+      githubID: sophia-guo
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        test:
+          - run-aqa 
+        include:
+          - test: run-aqa
+            build_list: external/quarkus_quickstarts
+            target: _sanity
+    steps:
+     - uses: actions/checkout@v1
+     - name: get prebuild jdk image
+       run: |
+         mkdir -p "${HOME}/jdk-${os}-x64-debug"
+         cd "${HOME}/jdk-${os}-x64-debug"
+         curl -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+         -H "Accept: application/vnd.github.v3+json" \
+         -OLJk "https://api.github.com/repos/${{ env.githubID }}/jdk/actions/artifacts/${{ env.artifactID }}/zip"
+         zipFilename=`find ./ -type f -exec basename {} \;`
+         echo ${zipFilename}
+         unzip ${zipFilename}
+     - name: Unpack jdk
+       run: |
+         mkdir -p "${HOME}/jdk-${os}-x64-debug/jdk-16-internal+0_${os}-x64_bin-debug"
+         tar -xf "${HOME}/jdk-${os}-x64-debug/jdk-16-internal+0_${os}-x64_bin-debug.tar.gz" -C "${HOME}/jdk-${os}-x64-debug/jdk-16-internal+0_${os}-x64_bin-debug"
+     - name: Unpack tests #only needed for jdk test
+       run: |
+         mkdir -p "${HOME}/jdk-${os}-x64-debug/jdk-16-internal+0_${os}-x64_bin-tests-debug"
+         tar -xf "${HOME}/jdk-${os}-x64-debug/jdk-16-internal+0_${os}-x64_bin-tests-debug.tar.gz" -C "${HOME}/jdk-linux-x64-debug/jdk-16-internal+0_${os}-x64_bin-tests-debug"
+     - name: Find root of jdk image dir
+       run: |
+         imageroot=`find ${HOME}/jdk-${os}-x64-debug/jdk-16-internal+0_${os}-x64_bin-debug -name release -type f`
+         echo "imageroot=`dirname ${imageroot}`" >> $GITHUB_ENV
+     - name: AQA
+       uses: AdoptOpenJDK/run-aqa@v1
+       with:
+         build_list: ${{ matrix.build_list }}
+         target: ${{ matrix.target}}
+       env:
+         TEST_JDK_HOME: ${{ env.imageroot }}
+         DOCKERIMAGE_TAG: nightly
+         EXTRA_DOCKER_ARGS: "-v ${{ env.imageroot }}:/opt/java/openjdk"
