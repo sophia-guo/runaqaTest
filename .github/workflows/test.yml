@@ -1,23 +1,19 @@
 name: "nightly build-jdk nightly"
 on:
   push:
-    branches-ignore:
-      - '**'
+
 jobs:
-  hotspot14:
+  hotspot16:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-16.04, macos-10.15]
-        impl: [hotspot, openj9]
-        javaToBuild: [jdk11u, jdk15u]
+        os: [ubuntu-16.04, macos-10.15, windows-2016]
+        javaToBuild: [jdk16]
     steps:
-    - uses: actions/checkout@v2
-    - uses: sophia-guo/build-jdk@buildfarm
+    - uses: actions/checkout@v1
+    - uses: sophia-guo/build-jdk@version
       id: buildJDK
       with: 
         javaToBuild: ${{ matrix.javaToBuild }}
-        impl: ${{ matrix.impl }}
     - run: ${{ steps.buildJDK.outputs.BuildJDKDir }}/bin/java -version
- 
