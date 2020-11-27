@@ -1,31 +1,30 @@
-name: "nightly build-jdk nightly"
+name: "run-aqa build with push to master"
 on:
   push:
-  pull_request:
-    types: [opened, synchronize, reopened, ready_for_review]
+
+
 jobs:
-  hotspot14:
+  installJDK: # make sure build/ci work properly
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-2016]
+        os: [ubuntu-latest]#[ubuntu-latest, macos-latest, windows-2016]
     steps:
-    - uses: actions/checkout@v2
-    - name: Extract branch name
-      shell: bash
-      run: |
-        if ${{ github.event_name == 'pull_request' }}; then
-          echo "::set-output name=branch::$(echo ${GITHUB_HEAD_REF})"
-          echo "::set-output name=repo::$(echo ${{ github.event.pull_request.head.repo.full_name }})"
-        else
-          echo "::set-output name=branch::$(echo ${GITHUB_REF#refs/heads/})"
-          echo "::set-output name=repo::$(echo ${{ github.repository }})"
-        fi
-      id: extract_branch
-    - name: testing github.repository
-      run: echo ${{ github.repository }}
-    - name: Testing
-      run: |
-        echo " full name is ${{ github.event.pull_request.head.repo.full_name }} ref is ${GITHUB_HEAD_REF}"
-        echo " repo is ${{ steps.extract_branch.outputs.repo }} branch is ${{ steps.extract_branch.outputs.branch }}"
+    - uses: actions/checkout@v1
+    - uses: AdoptOpenJDK/install-jdk@v1
+      with:
+        version: '8'
+        targets: 'JDK_8'
+        #impl: 'openj9'
+        source: 'https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u-2020-12-02-12-32/OpenJDK8U-jdk_x64_linux_hotspot_2020-12-02-12-32.tar.gz'
+        sourceType: 'url'
+        
+    - name: AQA
+      uses:  AdoptOpenJDK/run-aqa@v1
+      with: 
+        version: '8'
+        jdksource: 'install-jdk'
+        build_list: 'openjdk'
+        target: '_jdk_custom'
+        custom_target: 'jdk/test/java/util/concurrent/forkjoin/AccessControlContext.java'
