@@ -9,22 +9,21 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]#[ubuntu-latest, macos-latest, windows-2016]
+        os: [ubuntu-latest, macos-latest, windows-2016]
     steps:
     - uses: actions/checkout@v1
     - uses: AdoptOpenJDK/install-jdk@v1
       with:
-        version: '8'
-        targets: 'JDK_8'
+        version: '15'
+        targets: 'JDK_15'
         #impl: 'openj9'
-        source: 'https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u-2020-12-02-12-32/OpenJDK8U-jdk_x64_linux_hotspot_2020-12-02-12-32.tar.gz'
-        sourceType: 'url'
-        
+        source: 'nightly'
+        #source: 'https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u-2020-12-02-12-32/OpenJDK8U-jdk_x64_linux_hotspot_2020-12-02-12-32.tar.gz'
+        #sourceType: 'url'
     - name: AQA
-      uses:  AdoptOpenJDK/run-aqa@v1
+      uses: sophia-guo/run-aqa@SPEC
       with: 
-        version: '8'
+        version: '15'
         jdksource: 'install-jdk'
-        build_list: 'openjdk'
-        target: '_jdk_custom'
-        custom_target: 'jdk/test/java/util/concurrent/forkjoin/AccessControlContext.java'
+        build_list: 'functional'
+        target: '_sanity.regular'
