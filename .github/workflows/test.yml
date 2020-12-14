@@ -4,30 +4,47 @@ on:
 
 
 jobs:
-  installJDK: # make sure build/ci work properly
+  callsiteTest: # make sure build/ci work properly
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest] #[ubuntu-latest, macos-latest, windows-2016]
+        os: [ubuntu-latest, macos-latest, windows-2016]
     steps:
-    - uses: actions/checkout@v1
-    - run: |
-        sudo sysctl kern.sysv.shmmax
-        sudo sysctl -w kern.sysv.shmall=655360
-        sudo sysctl -w kern.sysv.shmmax=125839605760
     - uses: AdoptOpenJDK/install-jdk@v1
       with:
-        version: '15'
-        targets: 'JDK_15'
-        impl: 'openj9'
+        version: '8'
+        targets: 'JDK_8'
+#        impl: 'openj9'
         source: 'nightly'
-        #source: 'https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u-2020-12-02-12-32/OpenJDK8U-jdk_x64_linux_hotspot_2020-12-02-12-32.tar.gz'
-        #sourceType: 'url'
+#        source: 'https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk11u-2020-10-31-16-42/OpenJDK11U-jdk_x64_mac_openj9_2020-10-31-16-42.tar.gz'
+#        sourceType: 'url'
+#        archiveExtension: '.tar'
     - name: AQA
-      uses: sophia-guo/run-aqa@SPEC
+      uses: sophia-guo/run-aqa@depends
       with: 
-        version: '15'
+        version: '8'
         jdksource: 'install-jdk'
-        build_list: 'functional'
-        target: '_testSCCMLTests1_openj9'
+        build_list: 'system/jlm'
+        target: '_TestJlmRemoteMemoryNoAuth'
+#    - name: AQA
+#      uses: sophia-guo/run-aqa@depends
+#      with: 
+#        version: '8'
+#        jdksource: 'install-jdk'
+#        build_list: 'functional'
+#        target: '_floatSanityTests'
+#        openjdk_testRepo: 'sophia-guo/openjdk-tests:openj9'
+#        openjdk_testRepo: 'sophia-guo/openjdk-tests:openj9'
+    - name: upload ubuntu result
+      uses: actions/upload-artifact@v2
+      if: failure() && contains(matrix.os, 'ubuntu')
+      with:
+        name: test_output_callsite_ubuntu
+        path: ./**/test_output_*/
+    - name: upload mac result
+      uses: actions/upload-artifact@v2
+      if: failure() && contains(matrix.os, 'macos')
+      with:
+        name: test_output_callsite_macos
+        path: ./**/test_output_*/
