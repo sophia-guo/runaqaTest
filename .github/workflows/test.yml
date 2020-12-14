@@ -1,33 +1,27 @@
-name: "run-aqa build with push to master"
+name: "nightly build-jdk nightly"
 on:
   push:
 
-
 jobs:
-  installJDK: # make sure build/ci work properly
+  hotspot14:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest] #[ubuntu-latest, macos-latest, windows-2016]
+        os: [macos-latest]
+        impl: [temurin]
+        buildlist: [openjdk]
+        version: [11]
     steps:
-    - uses: actions/checkout@v1
-    - run: |
-        sudo sysctl kern.sysv.shmmax
-        sudo sysctl -w kern.sysv.shmall=655360
-        sudo sysctl -w kern.sysv.shmmax=125839605760
-    - uses: AdoptOpenJDK/install-jdk@v1
+    - uses: actions/checkout@v3
+    - uses: actions/setup-java@v3
       with:
-        version: '15'
-        targets: 'JDK_15'
-        impl: 'openj9'
-        source: 'nightly'
-        #source: 'https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u-2020-12-02-12-32/OpenJDK8U-jdk_x64_linux_hotspot_2020-12-02-12-32.tar.gz'
-        #sourceType: 'url'
+        java-version: ${{ matrix.version }}
+        distribution: ${{ matrix.impl }}
     - name: AQA
-      uses: sophia-guo/run-aqa@SPEC
+      uses: adoptium/run-aqa@v2
       with: 
-        version: '15'
+        version: ${{ matrix.version }}
         jdksource: 'install-jdk'
-        build_list: 'functional'
-        target: '_testSCCMLTests1_openj9'
+        build_list: ${{ matrix.buildlist}}
+        target: '_jvm_compiler'
