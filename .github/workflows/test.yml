@@ -9,14 +9,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-2016]
+        os: [macos-latest] #[ubuntu-latest, macos-latest, windows-2016]
     steps:
     - uses: actions/checkout@v1
+    - run: |
+        sudo sysctl kern.sysv.shmmax
+        sudo sysctl -w kern.sysv.shmall=655360
+        sudo sysctl -w kern.sysv.shmmax=125839605760
     - uses: AdoptOpenJDK/install-jdk@v1
       with:
         version: '15'
         targets: 'JDK_15'
-        #impl: 'openj9'
+        impl: 'openj9'
         source: 'nightly'
         #source: 'https://github.com/AdoptOpenJDK/openjdk8-binaries/releases/download/jdk8u-2020-12-02-12-32/OpenJDK8U-jdk_x64_linux_hotspot_2020-12-02-12-32.tar.gz'
         #sourceType: 'url'
@@ -26,4 +30,4 @@ jobs:
         version: '15'
         jdksource: 'install-jdk'
         build_list: 'functional'
-        target: '_sanity.regular'
+        target: '_testSCCMLTests1_openj9'
