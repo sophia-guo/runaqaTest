@@ -1,23 +1,25 @@
-name: "nightly build-jdk nightly"
+name: "get raw openjdk hotspot11 build"
 on:
   push:
-    branches-ignore:
-      - '**'
+
 jobs:
   hotspot14:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-16.04, macos-10.15]
-        impl: [hotspot, openj9]
-        javaToBuild: [jdk11u, jdk15u]
+        os: [ubuntu-16.04]
     steps:
     - uses: actions/checkout@v2
-    - uses: sophia-guo/build-jdk@buildfarm
+    - uses: sophia-guo/build-jdk@getBuildJDK
       id: buildJDK
       with: 
-        javaToBuild: ${{ matrix.javaToBuild }}
-        impl: ${{ matrix.impl }}
+        javaToBuild: 'jdk11u'
     - run: ${{ steps.buildJDK.outputs.BuildJDKDir }}/bin/java -version
- 
+    - uses: actions/upload-artifact@v2
+      with:
+        name: hotspotJDK11raw
+        path: |
+          ./**/hotspot11linuxJDKclass.tar.gz
+          ./**/hotspot11linuxJDKsource.tar.gz
+          ./**/OpenJDK11U-jdk_x64_linux_hotspot_*.tar.gz
