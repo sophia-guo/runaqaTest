@@ -1,23 +1,24 @@
-name: "nightly build-jdk nightly"
+name: "run-aqa action tests"
 on:
   push:
-    branches-ignore:
-      - '**'
+
 jobs:
-  hotspot14:
+  hotspot16:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-16.04, macos-10.15]
-        impl: [hotspot, openj9]
-        javaToBuild: [jdk11u, jdk15u]
+        os: [ubuntu-latest]
+        version: [8]
+        impl: [hotspot]
+        buildlist: [openjdk]
     steps:
-    - uses: actions/checkout@v2
-    - uses: sophia-guo/build-jdk@buildfarm
-      id: buildJDK
-      with: 
-        javaToBuild: ${{ matrix.javaToBuild }}
-        impl: ${{ matrix.impl }}
-    - run: ${{ steps.buildJDK.outputs.BuildJDKDir }}/bin/java -version
+    - uses: actions/checkout@v1
+    - uses: AdoptOpenJDK/install-jdk@v1
+      with:
+        version: ${{ matrix.version }}
+        targets: JDK_${{ matrix.version }}
+        source: 'https://api.adoptopenjdk.net/v3/binary/latest/16/ea/linux/x64/jdk/openj9/normal/adoptopenjdk'
+        archiveExtension: '.tar'
+
  
