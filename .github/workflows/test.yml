@@ -15,7 +15,7 @@ jobs:
       with:
         version: '8'
         targets: 'JDK_8'
-        impl: 'openj9'
+#       impl: 'openj9'
         source: 'nightly'
 #        source: 'https://github.com/AdoptOpenJDK/openjdk11-binaries/releases/download/jdk11u-2020-10-31-16-42/OpenJDK11U-jdk_x64_mac_openj9_2020-10-31-16-42.tar.gz'
 #        sourceType: 'url'
