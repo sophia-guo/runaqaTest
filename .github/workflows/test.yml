@@ -9,11 +9,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-2016]
+        os: [ubuntu-latest] #[ubuntu-latest, macos-latest, windows-2016]
     steps:
     - uses: AdoptOpenJDK/install-jdk@v1
       with:
-        version: '8'
+        version: '11'
         targets: 'JDK_8'
 #       impl: 'openj9'
         source: 'nightly'
@@ -23,10 +23,11 @@ jobs:
     - name: AQA
       uses: sophia-guo/run-aqa@depends
       with: 
-        version: '8'
+        version: '11'
         jdksource: 'install-jdk'
-        build_list: 'system/jlm'
-        target: '_TestJlmRemoteMemoryNoAuth'
+        build_list: 'external/camel'
+        target: '_camel_test'
+        openjdk_testRepo: 'sophia-guo/openjdk-tests:external'
 #    - name: AQA
 #      uses: sophia-guo/run-aqa@depends
 #      with: 
