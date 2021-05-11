@@ -10,6 +10,11 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest] #[ubuntu-latest, macos-latest, windows-2016]
+        version: [8, 11, 16]
     steps:
     - uses: actions/checkout@v1
-    - uses: ./
+    - uses: sophia-guo/build-openj9@jdk8
+      id: buildJDK
+      with: 
+        version: ${{ matrix.version }}
+    - run: ${{ steps.buildJDK.outputs.BuildJDKDir }}/bin/java -version
