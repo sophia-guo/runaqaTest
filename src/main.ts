@@ -33,6 +33,14 @@ async function run(): Promise<void> {
   } else {
     core.info(`branh is ${process.env.GITHUB_HEAD_REF}`)
   }
+
+
+  if (process.env.GITHUB_REF === undefined) {
+    core.info('undefinec')
+
+  } else {
+    core.info(`defined ${process.env.GITHUB_REF}`)
+  }
 //  await exec.exec(`C:\\temp\\cygwin.exe  -q -P autoconf cpio libguile2.0_22 unzip zipcurl curl-debuginfo libcurl-devel libpng15 libpng-devel`)
 }
 
