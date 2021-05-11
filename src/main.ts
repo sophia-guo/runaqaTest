@@ -24,7 +24,7 @@ if (!tempDirectory) {
 }
 
 async function run(): Promise<void> {
-  if ('GITHUB_HEAD_REF' in process.env) {
+  if (process.env.GITHUB_HEAD_REF) {
     core.info(`branh is ${process.env.GITHUB_HEAD_REF}`)
   } else {
     core.info('GITHUB_REF ${process.env.GITHUB_REF}')
