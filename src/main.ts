@@ -24,7 +24,7 @@ if (!tempDirectory) {
 }
 
 async function run(): Promise<void> {
-  if (process.env.GITHUB_HEAD_REF === undefined) {
+  if (typeof process.env.GITHUB_HEAD_REF === 'undefined') {
     core.info('GITHUB_REF ${process.env.GITHUB_REF}')
     const ref = process.env.GITHUB_REF as string
     core.info(`ref is ${ref}`)
@@ -35,7 +35,7 @@ async function run(): Promise<void> {
   }
 
 
-  if (process.env.GITHUB_REF === undefined) {
+  if (typeof process.env.GITHUB_REF === 'undefined') {
     core.info('undefinec')
 
   } else {
