@@ -94,7 +94,7 @@ if (!tempDirectory) {
 }
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
-        if (process.env.GITHUB_HEAD_REF === 'undefined') {
+        if (process.env.GITHUB_HEAD_REF === undefined) {
             core.info('GITHUB_REF ${process.env.GITHUB_REF}');
             const ref = process.env.GITHUB_REF;
             core.info(`ref is ${ref}`);
