@@ -4,17 +4,32 @@ on:
 
 
 jobs:
-  test: # 
+  hotspot:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-18.04] #[ubuntu-latest, macos-latest, windows-2016]
-        version: [11]
+        os: [ubuntu-latest]
+        javaToBuild: [jdk16u]
     steps:
     - uses: actions/checkout@v1
-    - uses: sophia-guo/build-openj9@jdk11
+    - uses: sophia-guo/build-jdk@gcc
       id: buildJDK
-      with: 
-        version: ${{ matrix.version }}
+      with:
+        javaToBuild: ${{ matrix.javaToBuild }}
+    - run: ${{ steps.buildJDK.outputs.BuildJDKDir }}/bin/java -version
+  openj9:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        javaToBuild: [jdk16u]
+    steps:
+    - uses: actions/checkout@v1
+    - uses: sophia-guo/build-jdk@gcc
+      id: buildJDK
+      with:
+        javaToBuild: ${{ matrix.javaToBuild }}
+        impl: 'openj9'
     - run: ${{ steps.buildJDK.outputs.BuildJDKDir }}/bin/java -version
