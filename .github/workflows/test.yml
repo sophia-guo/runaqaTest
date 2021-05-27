@@ -4,12 +4,24 @@ on:
 
 
 jobs:
-  test: # 
+  hotspot:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-16.04, ubuntu-18.04, ubuntu-latest] #[ubuntu-latest, macos-latest, windows-2016]
+        os: [ubuntu-16.04]
+        javaToBuild: [jdk16u]
     steps:
     - uses: actions/checkout@v1
-    - run: gcc -v
+    - uses: sophia-guo/build-openj9@PR
+      id: buildJDK
+      with:
+        version: 16
+        usePersonalRepo: true
+        openj9Repo: sophia-guo/openj9:demo
+    - run: ${{ steps.buildJDK.outputs.BuildJDKDir }}/bin/java -version
+    - uses: actions/upload-artifact@v2
+      if: failure()
+      with:
+        name: logfilet
+        path: ./**/config.log/
