@@ -2,26 +2,18 @@ name: "run-aqa build with push to master"
 on:
   push:
 
-
 jobs:
   hotspot:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-16.04]
-        javaToBuild: [jdk16u]
+        os: [windows-2019]
+        javaToBuild: [jdk11u, jdk16u]
     steps:
     - uses: actions/checkout@v1
-    - uses: sophia-guo/build-openj9@PR
+    - uses: sophia-guo/build-jdk@win
       id: buildJDK
       with:
-        version: 16
-        usePersonalRepo: true
-        openj9Repo: sophia-guo/openj9:demo
+        javaToBuild: ${{ matrix.javaToBuild }}
     - run: ${{ steps.buildJDK.outputs.BuildJDKDir }}/bin/java -version
-    - uses: actions/upload-artifact@v2
-      if: failure()
-      with:
-        name: logfilet
-        path: ./**/config.log/
