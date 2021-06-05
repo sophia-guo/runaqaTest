@@ -2,26 +2,26 @@ name: "run-aqa build with push to master"
 on:
   push:
 
-
 jobs:
   hotspot:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-16.04]
+        os: [windows-2019]
         javaToBuild: [jdk16u]
     steps:
     - uses: actions/checkout@v1
-    - uses: sophia-guo/build-openj9@PR
-      id: buildJDK
-      with:
-        version: 16
-        usePersonalRepo: true
-        openj9Repo: sophia-guo/openj9:demo
-    - run: ${{ steps.buildJDK.outputs.BuildJDKDir }}/bin/java -version
-    - uses: actions/upload-artifact@v2
-      if: failure()
-      with:
-        name: logfilet
-        path: ./**/config.log/
+    - run: |
+        echo "test GITHUB_WORKSPACE ${GITHUB_WORKSPACE}}"
+        echo " tests HOME ${HOME}"
+    - name: Install Cygwin
+      run: |
+        New-Item -Path C:\ -Name 'openjdk' -ItemType 'directory'
+        Invoke-WebRequest -UseBasicParsing 'https://cygwin.com/setup-x86_64.exe' -OutFile 'C:\temp\cygwin.exe'
+        Start-Process -Wait -FilePath 'C:\temp\cygwin.exe' -ArgumentList '--packages autoconf,automake,bsdtar,cpio,curl,gcc-core,git,gnupg,grep,libtool,make,mingw64-x86_64-gcc-core,perl,rsync,unzip,wget,zip --quiet-mode --download --local-install --delete-orphans --site https://mirrors.kernel.org/sourceware/cygwin/ --local-package-dir C:\cygwin_packages --root C:\cygwin64'
+    - run: |
+        printenv
+        ls
+        
+     
