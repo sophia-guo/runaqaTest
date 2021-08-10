@@ -24,15 +24,22 @@ if (!tempDirectory) {
 }
 
 async function run(): Promise<void> {
-  let jdkBootDir = ''
-  if (IS_WINDOWS) {
-    if (`JAVA_HOME_13_X64` in process.env) {
-      jdkBootDir = process.env[`JAVA_HOME_13_X64`] as string
-      core.info(`jdkbootDie is ${jdkBootDir}`)
-      jdkBootDir = jdkBootDir.replace(/\s/g, '')
-      jdkBootDir = jdkBootDir.replace(/ProgramFiles/g, 'Progra~1')
-      core.info(`jdkbootDie is ${jdkBootDir}`)
-    }
+  if (process.env.GITHUB_HEAD_REF === '') {
+    core.info('GITHUB_REF ${process.env.GITHUB_REF}')
+    const ref = process.env.GITHUB_REF as string
+    core.info(`ref is ${ref}`)
+    const branch = ref.substr(ref.lastIndexOf('/') + 1)
+    core.info(`branch is ${branch}`)
+  } else {
+    core.info(`branh is ${process.env.GITHUB_HEAD_REF}`)
+  }
+
+
+  if (process.env.GITHUB_REF === '') {
+    core.info('undefinec')
+
+  } else {
+    core.info(`defined ${process.env.GITHUB_REF}`)
   }
 //  await exec.exec(`C:\\temp\\cygwin.exe  -q -P autoconf cpio libguile2.0_22 unzip zipcurl curl-debuginfo libcurl-devel libpng15 libpng-devel`)
 }

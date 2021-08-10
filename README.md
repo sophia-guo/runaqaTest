@@ -115,3 +115,15 @@ uses: actions/typescript-action@v1
 with:
   milliseconds: 1000
 ```
+
+## run aqa-test locally
+
+```
+export TEST_JDK_HOME=<path to JDK directory that you wish to test>
+git clone https://github.com/adoptium/aqa-tests.git
+get.sh
+cd TKG
+export BUILD_LIST=openjdk
+make compile
+make _jdk_math
+```
