@@ -1,3 +1,4 @@
+#
 name: "nightly build-jdk nightly"
 on:
   push:
